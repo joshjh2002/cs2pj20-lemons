@@ -2,9 +2,21 @@ package com.joshh29012945.lemons;
 
 import android.graphics.Color;
 
+/**
+ * An invisible object of fixed size that will move lemons from the buffer to the active list
+ */
 public class Spawner extends Object {
+    /**
+     * Holds current game object so that it can directly interact with its methods and lists
+     */
     Game currentGame;
+    /**
+     * Time since its creation/last spawn
+     */
     float elapsed_time;
+    /**
+     * Time, in seconds, after which a new lemon will spawn
+     */
     float spawn_delay;
 
     public Spawner(int x, int y, Game currentGame, float spawn_delay) {

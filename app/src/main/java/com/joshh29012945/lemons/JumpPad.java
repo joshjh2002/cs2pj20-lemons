@@ -2,7 +2,10 @@ package com.joshh29012945.lemons;
 
 import android.graphics.Color;
 
-public class JumpPad extends Object{
+/**
+ * When collided with, a lemon will jump
+ */
+public class JumpPad extends Object {
     public JumpPad(int x, int y, int w, int h) {
         super(x, y, w, h);
         paint.setColor(Color.BLUE);
@@ -26,8 +29,9 @@ public class JumpPad extends Object{
 
     @Override
     public void OnCollide(MasterClass masterClass) {
-        Lemon lemon = (Lemon)masterClass;
+        Lemon lemon = (Lemon) masterClass;
 
+        //Sets the jump time
         lemon.jump(0.5f);
     }
 }

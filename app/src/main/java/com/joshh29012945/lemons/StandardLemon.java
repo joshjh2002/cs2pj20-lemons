@@ -2,6 +2,9 @@ package com.joshh29012945.lemons;
 
 import android.graphics.Bitmap;
 
+/**
+ * Standard lemon. Moves back and forth until dead
+ */
 public class StandardLemon extends Lemon {
     public static Bitmap image;
 
