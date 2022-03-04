@@ -56,11 +56,6 @@ public abstract class Lemon extends MasterClass {
             timeJumping = 0;
         }
 
-        if (Game.touching) {
-            this.x = Game.x;
-            this.y = Game.y;
-        }
-
         this.y += dy * jumping * Game.frame_time;
         this.x += dx * direction * Game.frame_time;
     }

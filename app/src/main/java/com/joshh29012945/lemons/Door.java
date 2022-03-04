@@ -26,6 +26,11 @@ public class Door extends Object {
     }
 
     @Override
+    protected void OnButtonPressed() {
+
+    }
+
+    @Override
     public void Update() {
 
     }

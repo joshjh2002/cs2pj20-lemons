@@ -49,4 +49,9 @@ public class Platform extends Object {
                 lemon.direction = 1;
         }
     }
+
+    @Override
+    protected void OnButtonPressed() {
+
+    }
 }

@@ -34,4 +34,9 @@ public class JumpPad extends Object {
         //Sets the jump time
         lemon.jump(0.5f);
     }
+
+    @Override
+    protected void OnButtonPressed() {
+
+    }
 }

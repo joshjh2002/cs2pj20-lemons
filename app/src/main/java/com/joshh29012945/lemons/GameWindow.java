@@ -27,8 +27,7 @@ public class GameWindow extends AppCompatActivity {
         String level = intent.getStringExtra("level");
         String file = null;
 
-        switch (level)
-        {
+        switch (level) {
             case "Level 1":
                 file = "Level1.txt";
                 break;

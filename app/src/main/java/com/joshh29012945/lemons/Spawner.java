@@ -56,4 +56,9 @@ public class Spawner extends Object {
     public void OnCollide(MasterClass masterClass) {
 
     }
+
+    @Override
+    protected void OnButtonPressed() {
+
+    }
 }

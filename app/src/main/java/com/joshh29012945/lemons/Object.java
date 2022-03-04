@@ -22,4 +22,6 @@ public abstract class Object extends MasterClass {
      * @param masterClass - object this object collided with. Usually a lemon.
      */
     public abstract void OnCollide(MasterClass masterClass);
+
+    protected abstract void OnButtonPressed();
 }

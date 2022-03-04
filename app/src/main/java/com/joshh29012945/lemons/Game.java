@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -78,6 +79,10 @@ public class Game extends SurfaceView implements Runnable {
      */
     static float frame_time = 0;
 
+    ExitReason exitReason;
+
+    int lemonCount;
+
     /**
      * Takes Context as a parameter. Creates a new "Game" and adds in all objects stored in asset file
      *
@@ -132,6 +137,7 @@ public class Game extends SurfaceView implements Runnable {
             e.printStackTrace();
         }
 
+        lemonCount = lemonsBuffer.size();
         //Add images for all relevant classes
         StandardLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
                 R.drawable.lemon);
@@ -142,8 +148,8 @@ public class Game extends SurfaceView implements Runnable {
         frameDest = new Rect();
         frameDest.top = 0;
         frameDest.left = 0;
-        frameDest.bottom = 1080;
-        frameDest.right = 1920;
+        frameDest.bottom = 720;
+        frameDest.right = 1280;
 
         //Initialises the collision rectangles
         lemonRect = new Rect();
@@ -151,6 +157,7 @@ public class Game extends SurfaceView implements Runnable {
 
         //Sets score to 0
         score = 0;
+        exitReason = null;
 
         running = true;
     }
@@ -217,7 +224,13 @@ public class Game extends SurfaceView implements Runnable {
         tmp.drawText("Score: " + score, 25f, 75f, myPaint);
         myPaint.setColor(Color.BLACK);
         canvas.drawRect(0, 0, getWidth(), getHeight(), myPaint);
+        frameDest.bottom = getHeight();
+        frameDest.right = (1080 / getHeight()) * 1920;
         canvas.drawBitmap(frame, null, frameDest, null);
+        myPaint.setColor(Color.RED);
+        //canvas.drawRect(getWidth(),0,getWidth() - 150 , 150, myPaint);
+        //myPaint.setColor(Color.BLACK);
+        canvas.drawText("Quit ", getWidth() - 140f, 100f, myPaint);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -228,6 +241,10 @@ public class Game extends SurfaceView implements Runnable {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touching = true;
+                if (x > getWidth() - 150f && y < 150f) {
+                    running = false;
+                    exitReason = ExitReason.QUIT;
+                }
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
@@ -255,7 +272,17 @@ public class Game extends SurfaceView implements Runnable {
         Context context = getContext();
         Intent switchActivityIntent = new Intent(context, LevelFinished.class);
         switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        switchActivityIntent.putExtra("pass_fail", "Passed");
+
+        String exitMessage = "";
+
+        if (exitReason == ExitReason.PASSED)
+            exitMessage = "Passed";
+        else if (exitReason == ExitReason.FAILED)
+            exitMessage = "Failed";
+        else if (exitReason == ExitReason.QUIT)
+            exitMessage = "Quit";
+
+        switchActivityIntent.putExtra("pass_fail", exitMessage);
         context.startActivity(switchActivityIntent);
     }
 
@@ -265,6 +292,10 @@ public class Game extends SurfaceView implements Runnable {
     private void CheckWon() {
         if (lemons.size() == 0 && lemonsBuffer.size() == 0) {
             running = false;
+            if (score >= lemonCount * 3 / 4)
+                exitReason = ExitReason.PASSED;
+            else
+                exitReason = ExitReason.FAILED;
         }
     }
 

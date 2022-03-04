@@ -6,5 +6,6 @@ public enum Tag {
     EXIT,
     JUMP,
     DOOR,
-    SPAWNER
+    SPAWNER,
+    BUTTON
 }

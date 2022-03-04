@@ -38,8 +38,8 @@ public class ItemAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = mInflator.inflate(R.layout.activity_level_list, null);
-        TextView nameTextView = (TextView) v.findViewById(R.id.name_text_view);
-        TextView descriptionTextView = (TextView) v.findViewById(R.id.description_view);
+        TextView nameTextView = v.findViewById(R.id.name_text_view);
+        TextView descriptionTextView = v.findViewById(R.id.description_view);
 
         String name = items[i];
         String desc = descriptions[i];

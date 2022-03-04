@@ -1,15 +1,12 @@
 package com.joshh29012945.lemons;
 
-import android.graphics.Color;
+public class Button extends Object {
+    Object linked_object;
 
-/**
- * Exit object does nothing. It shows a door object.
- */
-public class Exit extends Object {
-    public Exit(int x, int y) {
-        super(x, y, 96, 128);
-        tag = Tag.EXIT;
-        paint.setColor(Color.GREEN);
+    public Button(int x, int y, Object linked_object) {
+        super(x, y, 32, 16);
+        this.linked_object = linked_object;
+        tag = Tag.BUTTON;
     }
 
     @Override
@@ -29,7 +26,8 @@ public class Exit extends Object {
 
     @Override
     public void OnCollide(MasterClass masterClass) {
-
+        Lemon lemon = (Lemon) masterClass;
+        linked_object.OnButtonPressed();
     }
 
     @Override
