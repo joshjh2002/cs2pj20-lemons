@@ -1,4 +1,7 @@
 StandardLemon 0 0
+StandardLemon 0 0
+StandardLemon 0 0
+StandardLemon 0 0
 Platform 300 300 500 45
 Platform 300 0 45 300
 Platform 800 600 445 45

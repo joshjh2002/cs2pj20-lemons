@@ -83,7 +83,7 @@ public class Game extends SurfaceView implements Runnable {
      *
      * @param context the current context the game is ran in
      */
-    public Game(Context context) {
+    public Game(Context context, String level) {
         super(context);
         //Initialises the paint, and arrays
         myPaint = new Paint();
@@ -91,14 +91,15 @@ public class Game extends SurfaceView implements Runnable {
         lemons = new ArrayList<>();
         lemonsBuffer = new ArrayList<>();
         objects = new ArrayList<>();
-
+        if (level == null) {
+            level = "TestLevel.txt";
+        }
         //This will try to load the file it points to. If not, the thread will terminate and the level passed screen will show
         try {
-            InputStream is = context.getAssets().open("TestLevel.txt");
+            InputStream is = context.getAssets().open(level);
             int size = is.available();
             byte[] buffer = new byte[size];
-            if (is.read(buffer) > 0)
-            {
+            if (is.read(buffer) > 0) {
                 String text = new String(buffer);
                 text = text.trim();
                 String[] lines = text.split("\n");

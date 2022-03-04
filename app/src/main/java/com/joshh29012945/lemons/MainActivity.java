@@ -34,9 +34,13 @@ public class MainActivity extends AppCompatActivity {
         Button startBtn = findViewById(R.id.StartGameBtn);
         startBtn.setOnClickListener(e -> {
             finish();
-            Intent switchActivityIntent = new Intent(this, GameWindow.class);
+            /*Intent switchActivityIntent = new Intent(this, GameWindow.class);
             switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             switchActivityIntent.putExtra("level", filePath);
+            startActivity(switchActivityIntent);
+             */
+            Intent switchActivityIntent = new Intent(this, LevelSelect.class);
+            switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(switchActivityIntent);
         });
 

@@ -23,7 +23,24 @@ public class GameWindow extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        Game game = new Game(this);
+        Intent intent = getIntent();
+        String level = intent.getStringExtra("level");
+        String file = null;
+
+        switch (level)
+        {
+            case "Level 1":
+                file = "Level1.txt";
+                break;
+            case "Level 2":
+                file = "Level2.txt";
+                break;
+            case "Level 3":
+                file = "Level3.txt";
+                break;
+        }
+
+        Game game = new Game(this, file);
         game.setBackgroundColor(Color.WHITE);
 
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
