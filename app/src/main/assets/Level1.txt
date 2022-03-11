@@ -10,3 +10,4 @@ Exit 1300 172
 Spawner 340 235 2
 Button 600 290 7
 Button 1100 290 7
+TimeLimit 60

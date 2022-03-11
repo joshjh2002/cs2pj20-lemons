@@ -8,3 +8,4 @@ JumpPad 900 900 96 96
 JumpPad 600 900 96 96
 Exit 900 472
 Spawner 340 235 2
+TimeLimit 60

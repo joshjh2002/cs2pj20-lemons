@@ -8,3 +8,4 @@ Platform 800 600 445 45
 Platform 1200 300 45 345
 Exit 900 472
 Spawner 340 235 2
+TimeLimit 60

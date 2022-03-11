@@ -9,16 +9,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Game extends SurfaceView implements Runnable {
 
+    private float TimeLimit;
     /**
      * Lemon list of current "alive" lemons
      */
@@ -86,11 +87,14 @@ public class Game extends SurfaceView implements Runnable {
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
     static float frame_time = 0;
+    private float RunTime;
 
     /**
      * Holds the reason for leaving the level. Can be either pass, fail or quit
      */
     ExitReason exitReason;
+
+    private static final DecimalFormat TimeFormatter = new DecimalFormat("00");
 
     /**
      * Takes Context as a parameter. Creates a new "Game" and adds in all objects stored in asset file
@@ -107,6 +111,7 @@ public class Game extends SurfaceView implements Runnable {
         objects = new ArrayList<>();
 
         touchRect = new Rect();
+        RunTime = 0;
 
         if (level == null) {
             level = "TestLevel.txt";
@@ -159,6 +164,9 @@ public class Game extends SurfaceView implements Runnable {
                             break;
                         case "Button":
                             objects.add(new Button(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), objects.get(Integer.parseInt(parts[3]) - lemonsBuffer.size() - 1)));
+                            break;
+                        case "TimeLimit":
+                            this.TimeLimit = Float.parseFloat(parts[1]);
                             break;
                     }
                 }
@@ -284,8 +292,10 @@ public class Game extends SurfaceView implements Runnable {
         canvas.drawBitmap(frame, null, frameDest, null);
         myPaint.setColor(Color.RED);
         //canvas.drawRect(getWidth(),0,getWidth() - 150 , 150, myPaint);
-        //myPaint.setColor(Color.BLACK);
         canvas.drawText("Quit ", getWidth() - 140f, 100f, myPaint);
+
+        myPaint.setColor(Color.BLACK);
+        canvas.drawText("Time Remaining: " + TimeFormatter.format(TimeLimit - RunTime), 0, getHeight() - 50f, myPaint);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -348,6 +358,8 @@ public class Game extends SurfaceView implements Runnable {
             exitMessage = "Failed";
         else if (exitReason == ExitReason.QUIT)
             exitMessage = "Quit";
+        else if (exitReason == ExitReason.TIMEOUT)
+            exitMessage = "Not Completed";
 
         switchActivityIntent.putExtra("pass_fail", exitMessage);
         context.startActivity(switchActivityIntent);
@@ -364,6 +376,11 @@ public class Game extends SurfaceView implements Runnable {
             else
                 exitReason = ExitReason.FAILED;
         }
+        if (RunTime > TimeLimit) {
+            running = false;
+            exitReason = ExitReason.TIMEOUT;
+        }
+
     }
 
     /**
@@ -418,6 +435,8 @@ public class Game extends SurfaceView implements Runnable {
      * Updates the game. Is called once per frame
      */
     private void DoUpdates() {
+        RunTime += Game.frame_time;
+
         for (int i = 0; i < lemons.size(); i++) {
             Lemon lemon = lemons.get(i);
 
