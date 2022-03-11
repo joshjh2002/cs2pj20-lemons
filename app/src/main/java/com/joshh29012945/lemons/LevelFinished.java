@@ -10,6 +10,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Screen used to display level completion stats
+ */
 public class LevelFinished extends AppCompatActivity {
 
     @Override

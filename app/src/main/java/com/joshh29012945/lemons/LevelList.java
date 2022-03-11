@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+/**
+ * Dummy activity to specify the layout of the level select items
+ */
 public class LevelList extends AppCompatActivity {
 
     @Override

@@ -2,6 +2,9 @@ package com.joshh29012945.lemons;
 
 import android.graphics.Bitmap;
 
+/**
+ * Functions the same as a standard lemon but will stop moving when tapped
+ */
 public class StopperLemon extends StandardLemon {
     public static Bitmap image;
     float touchCooldown = 0.3f;

@@ -4,28 +4,36 @@ import android.graphics.Color;
 import android.graphics.Rect;
 
 public class Button extends Object {
+    /**
+     * Holds a reference to the object that the button is linked to
+     */
     Object linked_object;
-    Lemon touchingLemon;
+
+    /**
+     * Holds a reference to the lemon currently pressing the button
+     */
+    Lemon active_lemon;
 
     public Button(int x, int y, Object linked_object) {
         super(x, y, 64, 16);
         this.linked_object = linked_object;
         tag = Tag.BUTTON;
-        paint.setColor(Color.rgb(255, 150,150));
+        paint.setColor(Color.rgb(255, 150, 150));
     }
 
     @Override
     public void Update() {
-        if (touchingLemon != null)
-        {
-            Rect lemonRect = new Rect((int) touchingLemon.x, (int) touchingLemon.y,
-                    (int) touchingLemon.x + touchingLemon.w, (int) touchingLemon.y + touchingLemon.h);
+        // If something previously collided with the button
+        if (active_lemon != null) {
+            Rect lemonRect = new Rect((int) active_lemon.x, (int) active_lemon.y,
+                    (int) active_lemon.x + active_lemon.w, (int) active_lemon.y + active_lemon.h);
             Rect objectRect = new Rect((int) this.x, (int) this.y,
                     (int) this.x + this.w, (int) this.y + this.h);
 
-            if (!objectRect.intersect(lemonRect))
-            {
-                touchingLemon = null;
+            // Check if they are still colliding
+            if (!objectRect.intersect(lemonRect)) {
+                // If the are no longer colliding, reset the object the button is linked to
+                active_lemon = null;
                 linked_object.OnButtonPressedExit();
             }
         }
@@ -49,7 +57,7 @@ public class Button extends Object {
     @Override
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
-        touchingLemon = lemon;
+        active_lemon = lemon;
         linked_object.OnButtonPressed();
     }
 

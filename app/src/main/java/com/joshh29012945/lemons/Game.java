@@ -19,7 +19,10 @@ import java.util.ArrayList;
 
 public class Game extends SurfaceView implements Runnable {
 
-    private float TimeLimit;
+    /**
+     * The amount of time you have to complete the level
+     */
+    private float time_limit;
     /**
      * Lemon list of current "alive" lemons
      */
@@ -27,7 +30,7 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * Lemon list of all lemons currently not on the screen. These will gradually be moved to "lemons" by the spawner
      */
-    ArrayList<Lemon> lemonsBuffer;
+    ArrayList<Lemon> lemons_buffer;
     /**
      * A list of all "alive" objects
      */
@@ -36,17 +39,17 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * Holds a counter that stores the number of lemons created on level load
      */
-    int lemonCount;
+    int lemon_count;
 
     /**
      * Paint object to draw text to screen
      */
-    Paint myPaint;
+    Paint paint;
 
     /**
      * Determines the state of the run thread. If false, the thread will stop and the game will end
      */
-    Boolean running;
+    Boolean is_running;
     /**
      * Temporary canvas to draw each frame to
      */
@@ -58,43 +61,59 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * The destination of the frame, so if the screen is smaller than 1920*1080, I can scale the image down
      */
-    Rect frameDest;
+    Rect frame_dest_rect;
     /**
      * Collision rectangle for the lemon
      */
-    Rect lemonRect;
+    Rect lemon_rect;
     /**
      * Collision rectangle for the object
      */
-    Rect objectRect;
+    Rect object_rect;
     /**
      * Score
      */
     int score;
 
     /**
-     * Default starting position for any object that has not got a position
-     */
-    static int x = -50, y = -50;
-    /**
      * True when someone is touching the screen
      */
     static Boolean touching = false;
+
+    /**
+     * Current x and y position of the touch
+     */
     int touchX = -100, touchY = -100;
-    Rect touchRect;
+
+    /**
+     * A rectangle that will hold the x and y touch position.
+     * If this rectangle collides with an object, then you have touched that object
+     */
+    Rect touch_rect;
+
+    /**
+     * If true, then will be used to debug certain elements. Like drawing the touch location
+     */
     boolean DEBUG = true;
     /**
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
     static float frame_time = 0;
-    private float RunTime;
+
+    /**
+     * Holds how long the game has currently been running for
+     */
+    private float run_time;
 
     /**
      * Holds the reason for leaving the level. Can be either pass, fail or quit
      */
-    ExitReason exitReason;
+    ExitReason exit_reason;
 
-    private static final DecimalFormat TimeFormatter = new DecimalFormat("00");
+    /**
+     * Used to format the time remaining
+     */
+    private static final DecimalFormat time_formatter = new DecimalFormat("00");
 
     /**
      * Takes Context as a parameter. Creates a new "Game" and adds in all objects stored in asset file
@@ -104,14 +123,14 @@ public class Game extends SurfaceView implements Runnable {
     public Game(Context context, String level) {
         super(context);
         //Initialises the paint, and arrays
-        myPaint = new Paint();
+        paint = new Paint();
 
         lemons = new ArrayList<>();
-        lemonsBuffer = new ArrayList<>();
+        lemons_buffer = new ArrayList<>();
         objects = new ArrayList<>();
 
-        touchRect = new Rect();
-        RunTime = 0;
+        touch_rect = new Rect();
+        run_time = 0;
 
         if (level == null) {
             level = "TestLevel.txt";
@@ -140,10 +159,10 @@ public class Game extends SurfaceView implements Runnable {
                     String[] parts = s.trim().split(" ");
                     switch (parts[0]) {
                         case "StandardLemon":
-                            lemonsBuffer.add(new StandardLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+                            lemons_buffer.add(new StandardLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
                             break;
                         case "StopperLemon":
-                            lemonsBuffer.add(new StopperLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+                            lemons_buffer.add(new StopperLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
                             break;
                         case "Platform":
                             objects.add(new Platform(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
@@ -163,10 +182,10 @@ public class Game extends SurfaceView implements Runnable {
                             objects.add(new LavaPit(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
                             break;
                         case "Button":
-                            objects.add(new Button(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), objects.get(Integer.parseInt(parts[3]) - lemonsBuffer.size() - 1)));
+                            objects.add(new Button(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), objects.get(Integer.parseInt(parts[3]) - lemons_buffer.size() - 1)));
                             break;
                         case "TimeLimit":
-                            this.TimeLimit = Float.parseFloat(parts[1]);
+                            this.time_limit = Float.parseFloat(parts[1]);
                             break;
                     }
                 }
@@ -177,7 +196,7 @@ public class Game extends SurfaceView implements Runnable {
             e.printStackTrace();
         }
 
-        lemonCount = lemonsBuffer.size();
+        lemon_count = lemons_buffer.size();
         //Add images for all relevant classes
         StandardLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
                 R.drawable.lemon);
@@ -188,21 +207,21 @@ public class Game extends SurfaceView implements Runnable {
         //Initialises the frame bitmap and creates a canvas so I can draw to the bitmap
         frame = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
         tmp = new Canvas(frame);
-        frameDest = new Rect();
-        frameDest.top = 0;
-        frameDest.left = 0;
-        frameDest.bottom = 720;
-        frameDest.right = 1280;
+        frame_dest_rect = new Rect();
+        frame_dest_rect.top = 0;
+        frame_dest_rect.left = 0;
+        frame_dest_rect.bottom = 720;
+        frame_dest_rect.right = 1280;
 
         //Initialises the collision rectangles
-        lemonRect = new Rect();
-        objectRect = new Rect();
+        lemon_rect = new Rect();
+        object_rect = new Rect();
 
         //Sets score to 0
         score = 0;
-        exitReason = null;
+        exit_reason = null;
 
-        running = true;
+        is_running = true;
     }
 
     /**
@@ -231,19 +250,20 @@ public class Game extends SurfaceView implements Runnable {
      * @param canvas that will be drawn on
      */
     protected void onDraw(Canvas canvas) {
-        myPaint.setColor(Color.WHITE);
-        myPaint.setStrokeWidth(3);
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(3);
 
         //Clears the Canvas
-        tmp.drawRect(0, 0, 1920, 1080, myPaint);
+        tmp.drawRect(0, 0, 1920, 1080, paint);
 
 
         if (DEBUG) {
-            myPaint.setColor(Color.BLACK);
+            paint.setColor(Color.BLACK);
             //tmp.drawCircle(touchX, touchY, 40, myPaint);
-            tmp.drawRect(touchRect, myPaint);
+            tmp.drawRect(touch_rect, paint);
         }
 
+        //Draws all objects, provided that object is not "dead"
         for (Object object : objects) {
             if (!object.isDead) {
                 switch (object.tag) {
@@ -253,21 +273,22 @@ public class Game extends SurfaceView implements Runnable {
                     case JUMP:
                     case EXIT:
                     case PLATFORM:
-                        objectRect.left = (int) object.x;
-                        objectRect.top = (int) object.y;
-                        objectRect.right = (int) object.x + object.w;
-                        objectRect.bottom = (int) object.y + object.h;
-                        tmp.drawRect(objectRect, object.paint);
+                        object_rect.left = (int) object.x;
+                        object_rect.top = (int) object.y;
+                        object_rect.right = (int) object.x + object.w;
+                        object_rect.bottom = (int) object.y + object.h;
+                        tmp.drawRect(object_rect, object.paint);
                         break;
                 }
             }
 
+            //draws all lemons
             for (int i = 0; i < lemons.size(); i++) {
                 Lemon lemon = lemons.get(i);
-                lemonRect.left = (int) lemon.x;
-                lemonRect.top = (int) lemon.y;
-                lemonRect.right = (int) lemon.x + lemon.w;
-                lemonRect.bottom = (int) lemon.y + lemon.h;
+                lemon_rect.left = (int) lemon.x;
+                lemon_rect.top = (int) lemon.y;
+                lemon_rect.right = (int) lemon.x + lemon.w;
+                lemon_rect.bottom = (int) lemon.y + lemon.h;
                 Bitmap image = null;
                 switch (lemon.tag) {
                     case STANDARD_LEMON:
@@ -277,55 +298,62 @@ public class Game extends SurfaceView implements Runnable {
                         image = StopperLemon.image;
                         break;
                 }
-                tmp.drawBitmap(image, null, lemonRect, null);
+                tmp.drawBitmap(image, null, lemon_rect, null);
                 //canvas.drawBitmap(Lemon.image, lemon.x - 32f, lemon.y - 32f, null);
             }
             //canvas.drawBitmap(Lemon.image, object.x1 - object.w, object.y1 - object.h, null);
         }
-        myPaint.setColor(Color.BLUE);
-        myPaint.setTextSize(64f);
-        tmp.drawText("Score: " + score, 25f, 75f, myPaint);
-        myPaint.setColor(Color.BLACK);
-        canvas.drawRect(0, 0, getWidth(), getHeight(), myPaint);
-        frameDest.bottom = getHeight();
-        frameDest.right = (1080 / getHeight()) * 1920;
-        canvas.drawBitmap(frame, null, frameDest, null);
-        myPaint.setColor(Color.RED);
-        //canvas.drawRect(getWidth(),0,getWidth() - 150 , 150, myPaint);
-        canvas.drawText("Quit ", getWidth() - 140f, 100f, myPaint);
+        // Draws the score to the top left of the screen
+        paint.setColor(Color.BLUE);
+        paint.setTextSize(64f);
+        tmp.drawText("Score: " + score, 25f, 75f, paint);
 
-        myPaint.setColor(Color.BLACK);
-        canvas.drawText("Time Remaining: " + TimeFormatter.format(TimeLimit - RunTime), 0, getHeight() - 50f, myPaint);
+        //Fills in the background to easily distinguish between background and the level bitmap
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
+        frame_dest_rect.bottom = getHeight();
+        frame_dest_rect.right = (1080 / getHeight()) * 1920;
+        canvas.drawBitmap(frame, null, frame_dest_rect, null);
+
+        // Draws the exit button
+        paint.setColor(Color.RED);
+        canvas.drawText("Quit ", getWidth() - 140f, 100f, paint);
+
+        // Draws the time remaining
+        paint.setColor(Color.BLACK);
+        canvas.drawText("Time Remaining: " + time_formatter.format(time_limit - run_time), 0, getHeight() - 50f, paint);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        x = (int) event.getX();
-        y = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                // The user has tapped the screen
                 touching = true;
-                this.touchX = x;
-                this.touchY = y;
+                this.touchX = (int) event.getX();
 
-                touchRect.top = y - 20;
-                touchRect.left = x - 20;
-                touchRect.bottom = y + 20;
-                touchRect.right = x + 20;
+                this.touchY = (int) event.getY();
 
-                if (x > getWidth() - 150f && y < 150f) {
-                    running = false;
-                    exitReason = ExitReason.QUIT;
+                touch_rect.top = touchY - 20;
+                touch_rect.left = touchX - 20;
+                touch_rect.bottom = touchY + 20;
+                touch_rect.right = touchX + 20;
+
+                // Checks if the user has pressed the Quit button
+                if (touchX > getWidth() - 150f && touchY < 150f) {
+                    is_running = false;
+                    exit_reason = ExitReason.QUIT;
                 }
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
+                // When the user is no longer touching the screen
                 touching = false;
-                touchRect.top = -100;
-                touchRect.left = -100;
-                touchRect.bottom = -90;
-                touchRect.right = -90;
+                touch_rect.top = -100;
+                touch_rect.left = -100;
+                touch_rect.bottom = -90;
+                touch_rect.right = -90;
                 break;
         }
         return true;
@@ -335,6 +363,7 @@ public class Game extends SurfaceView implements Runnable {
      * Added through the implementation of "Runnable". This is the game thread
      */
     public void run() {
+        // The game thread loop. Will continue until the game is no longer running
         do {
             long startTime = System.currentTimeMillis();
             CheckCollision();
@@ -344,23 +373,26 @@ public class Game extends SurfaceView implements Runnable {
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime);
             frame_time = duration / 1000.0f;
-        } while (running);
+        } while (is_running);
 
+        // Sets up the activity change to go to the level finished screen
         Context context = getContext();
         Intent switchActivityIntent = new Intent(context, LevelFinished.class);
         switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+        // Sets the exit message
         String exitMessage = "";
 
-        if (exitReason == ExitReason.PASSED)
+        if (exit_reason == ExitReason.PASSED)
             exitMessage = "Passed";
-        else if (exitReason == ExitReason.FAILED)
+        else if (exit_reason == ExitReason.FAILED)
             exitMessage = "Failed";
-        else if (exitReason == ExitReason.QUIT)
+        else if (exit_reason == ExitReason.QUIT)
             exitMessage = "Quit";
-        else if (exitReason == ExitReason.TIMEOUT)
+        else if (exit_reason == ExitReason.TIMEOUT)
             exitMessage = "Not Completed";
 
+        // Actually switches activity
         switchActivityIntent.putExtra("pass_fail", exitMessage);
         context.startActivity(switchActivityIntent);
     }
@@ -369,16 +401,20 @@ public class Game extends SurfaceView implements Runnable {
      * Checks if the game has ended. If it has, the thread will be stopped
      */
     private void CheckWon() {
-        if (lemons.size() == 0 && lemonsBuffer.size() == 0) {
-            running = false;
-            if (score >= lemonCount * 3 / 4)
-                exitReason = ExitReason.PASSED;
+        // if ther are no more lemons alive and in the buffer, the game has finished
+        if (lemons.size() == 0 && lemons_buffer.size() == 0) {
+            is_running = false;
+            // to win, at least 75% of the total lemons must reach the exit
+            if (score >= lemon_count * 3 / 4)
+                exit_reason = ExitReason.PASSED;
             else
-                exitReason = ExitReason.FAILED;
+                exit_reason = ExitReason.FAILED;
         }
-        if (RunTime > TimeLimit) {
-            running = false;
-            exitReason = ExitReason.TIMEOUT;
+
+        // if run_time is larger then time_limit then it will exit the level
+        if (run_time > time_limit) {
+            is_running = false;
+            exit_reason = ExitReason.TIMEOUT;
         }
 
     }
@@ -412,7 +448,7 @@ public class Game extends SurfaceView implements Runnable {
             for (Lemon lemon : lemons) {
                 Rect lemonRect = new Rect((int) lemon.x, (int) lemon.y,
                         (int) lemon.x + lemon.w, (int) lemon.y + lemon.h);
-                if (lemonRect.intersect(touchRect)) {
+                if (lemonRect.intersect(touch_rect)) {
                     lemon.OnTouch();
                     touchedItem = true;
                     break;
@@ -423,7 +459,7 @@ public class Game extends SurfaceView implements Runnable {
                 for (Object object : objects) {
                     Rect objectRect = new Rect((int) object.x, (int) object.y,
                             (int) object.x + object.w, (int) object.y + object.h);
-                    if (objectRect.intersect(touchRect)) {
+                    if (objectRect.intersect(touch_rect)) {
                         object.OnTouch();
                         break;
                     }
@@ -435,27 +471,32 @@ public class Game extends SurfaceView implements Runnable {
      * Updates the game. Is called once per frame
      */
     private void DoUpdates() {
-        RunTime += Game.frame_time;
+        // increases run_time
+        run_time += Game.frame_time;
 
+        // updates all lemons
         for (int i = 0; i < lemons.size(); i++) {
             Lemon lemon = lemons.get(i);
 
+            // if lemon has left the level then it will remove it from thr list and increase score
             if (lemon.isLeft) {
-                lemon.OnDeath();
                 RemoveLemon(lemon);
                 i--;
                 score++;
                 continue;
             }
+            // if lemon died, it will remove it from the list but not increase the score
             if (lemon.isDead) {
                 lemon.OnDeath();
                 RemoveLemon(lemon);
                 i--;
                 continue;
             }
+            // if the lemon is still in the level, it will update
             lemon.Update();
         }
 
+        // update all objects
         for (Object object : objects)
             object.Update();
     }

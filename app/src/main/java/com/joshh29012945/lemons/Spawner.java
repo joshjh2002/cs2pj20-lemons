@@ -32,12 +32,12 @@ public class Spawner extends Object {
     public void Update() {
         elapsed_time += Game.frame_time;
 
-        if (currentGame.lemonsBuffer.size() > 0 && elapsed_time >= spawn_delay) {
-            Lemon lemon = currentGame.lemonsBuffer.get(0);
+        if (currentGame.lemons_buffer.size() > 0 && elapsed_time >= spawn_delay) {
+            Lemon lemon = currentGame.lemons_buffer.get(0);
             lemon.x = this.x;
             lemon.y = this.y;
             currentGame.lemons.add(lemon);
-            currentGame.lemonsBuffer.remove(0);
+            currentGame.lemons_buffer.remove(0);
             elapsed_time = 0;
         }
     }

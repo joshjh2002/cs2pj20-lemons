@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+/**
+ * Loads the game based on the data passed via the intent
+ */
 public class GameWindow extends AppCompatActivity {
 
     @Override

@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+/**
+ * An intent to select a level to play
+ */
 public class LevelSelect extends AppCompatActivity {
     ListView myListView;
     String[] name;
