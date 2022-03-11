@@ -14,6 +14,7 @@ public abstract class Object extends MasterClass {
     public Object(int x, int y, int w, int h) {
         super(x, y, w, h);
         paint = new Paint();
+        isDead = false;
     }
 
     /**
@@ -24,4 +25,6 @@ public abstract class Object extends MasterClass {
     public abstract void OnCollide(MasterClass masterClass);
 
     protected abstract void OnButtonPressed();
+
+    protected abstract void OnButtonPressedExit();
 }

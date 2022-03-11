@@ -41,4 +41,9 @@ public class Exit extends Object {
     protected void OnButtonPressed() {
 
     }
+
+    @Override
+    protected void OnButtonPressedExit() {
+
+    }
 }

@@ -57,6 +57,11 @@ public class Platform extends Object {
 
     @Override
     protected void OnButtonPressed() {
+        this.isDead = true;
+    }
 
+    @Override
+    protected void OnButtonPressedExit() {
+        this.isDead = false;
     }
 }

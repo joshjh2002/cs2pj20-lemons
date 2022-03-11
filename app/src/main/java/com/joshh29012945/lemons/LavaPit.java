@@ -40,4 +40,9 @@ public class LavaPit extends Object {
     protected void OnButtonPressed() {
 
     }
+
+    @Override
+    protected void OnButtonPressedExit() {
+
+    }
 }

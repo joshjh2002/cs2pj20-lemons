@@ -66,4 +66,9 @@ public class Spawner extends Object {
     protected void OnButtonPressed() {
 
     }
+
+    @Override
+    protected void OnButtonPressedExit() {
+
+    }
 }

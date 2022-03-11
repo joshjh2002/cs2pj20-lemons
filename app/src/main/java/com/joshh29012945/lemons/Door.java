@@ -31,6 +31,11 @@ public class Door extends Object {
     }
 
     @Override
+    protected void OnButtonPressedExit() {
+
+    }
+
+    @Override
     public void Update() {
 
     }

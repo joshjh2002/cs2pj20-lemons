@@ -237,19 +237,21 @@ public class Game extends SurfaceView implements Runnable {
         }
 
         for (Object object : objects) {
-            switch (object.tag) {
-                case BUTTON:
-                case LAVA:
-                case DOOR:
-                case JUMP:
-                case EXIT:
-                case PLATFORM:
-                    objectRect.left = (int) object.x;
-                    objectRect.top = (int) object.y;
-                    objectRect.right = (int) object.x + object.w;
-                    objectRect.bottom = (int) object.y + object.h;
-                    tmp.drawRect(objectRect, object.paint);
-                    break;
+            if (!object.isDead) {
+                switch (object.tag) {
+                    case BUTTON:
+                    case LAVA:
+                    case DOOR:
+                    case JUMP:
+                    case EXIT:
+                    case PLATFORM:
+                        objectRect.left = (int) object.x;
+                        objectRect.top = (int) object.y;
+                        objectRect.right = (int) object.x + object.w;
+                        objectRect.bottom = (int) object.y + object.h;
+                        tmp.drawRect(objectRect, object.paint);
+                        break;
+                }
             }
 
             for (int i = 0; i < lemons.size(); i++) {
@@ -310,6 +312,10 @@ public class Game extends SurfaceView implements Runnable {
                 break;
             case MotionEvent.ACTION_UP:
                 touching = false;
+                touchRect.top = -100;
+                touchRect.left = -100;
+                touchRect.bottom = -90;
+                touchRect.right = -90;
                 break;
         }
         return true;
@@ -372,7 +378,7 @@ public class Game extends SurfaceView implements Runnable {
             for (Object object : objects) {
                 Rect objectRect = new Rect((int) object.x, (int) object.y,
                         (int) object.x + object.w, (int) object.y + object.h);
-                if (objectRect.intersect(lemonRect)) {
+                if (objectRect.intersect(lemonRect) && !object.isDead) {
                     object.OnCollide(lemon);
                     collisionFound = true;
                 }

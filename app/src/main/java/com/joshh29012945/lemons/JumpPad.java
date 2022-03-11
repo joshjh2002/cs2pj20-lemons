@@ -42,6 +42,11 @@ public class JumpPad extends Object {
 
     @Override
     protected void OnButtonPressed() {
-        
+
+    }
+
+    @Override
+    protected void OnButtonPressedExit() {
+
     }
 }
