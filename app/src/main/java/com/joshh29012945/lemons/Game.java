@@ -137,6 +137,9 @@ public class Game extends SurfaceView implements Runnable {
                         case "StandardLemon":
                             lemonsBuffer.add(new StandardLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
                             break;
+                        case "StopperLemon":
+                            lemonsBuffer.add(new StopperLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+                            break;
                         case "Platform":
                             objects.add(new Platform(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
                                     Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
@@ -170,6 +173,9 @@ public class Game extends SurfaceView implements Runnable {
         //Add images for all relevant classes
         StandardLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
                 R.drawable.lemon);
+
+        StopperLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.stopper);
 
         //Initialises the frame bitmap and creates a canvas so I can draw to the bitmap
         frame = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
@@ -252,7 +258,16 @@ public class Game extends SurfaceView implements Runnable {
                 lemonRect.top = (int) lemon.y;
                 lemonRect.right = (int) lemon.x + lemon.w;
                 lemonRect.bottom = (int) lemon.y + lemon.h;
-                tmp.drawBitmap(StandardLemon.image, null, lemonRect, null);
+                Bitmap image = null;
+                switch (lemon.tag) {
+                    case STANDARD_LEMON:
+                        image = StandardLemon.image;
+                        break;
+                    case STOPPER_LEMON:
+                        image = StopperLemon.image;
+                        break;
+                }
+                tmp.drawBitmap(image, null, lemonRect, null);
                 //canvas.drawBitmap(Lemon.image, lemon.x - 32f, lemon.y - 32f, null);
             }
             //canvas.drawBitmap(Lemon.image, object.x1 - object.w, object.y1 - object.h, null);
