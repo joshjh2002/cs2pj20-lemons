@@ -24,7 +24,8 @@ public class GameWindow extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null)
+            actionBar.hide();
 
         Intent intent = getIntent();
         String level = intent.getStringExtra("level");

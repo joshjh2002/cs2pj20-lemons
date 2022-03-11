@@ -25,7 +25,9 @@ public class LevelFinished extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null)
+            actionBar.hide();
+
 
         setContentView(R.layout.activity_level_finished);
 

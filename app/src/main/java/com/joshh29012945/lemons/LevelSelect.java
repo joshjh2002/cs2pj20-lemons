@@ -1,18 +1,16 @@
 package com.joshh29012945.lemons;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * An intent to select a level to play
@@ -32,7 +30,9 @@ public class LevelSelect extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null)
+            actionBar.hide();
+
 
         setContentView(R.layout.activity_level_select);
 
@@ -48,15 +48,12 @@ public class LevelSelect extends AppCompatActivity {
 
         Context context = this;
 
-        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                Intent switchActivityIntent = new Intent(context, GameWindow.class);
-                switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                switchActivityIntent.putExtra("level", name[i]);
-                startActivity(switchActivityIntent);
+        myListView.setOnItemClickListener((parent, view, i, l) -> {
+            Intent switchActivityIntent = new Intent(context, GameWindow.class);
+            switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            switchActivityIntent.putExtra("level", name[i]);
+            startActivity(switchActivityIntent);
 
-            }
         });
 
         Button mainMenu = findViewById(R.id.to_main_menu);

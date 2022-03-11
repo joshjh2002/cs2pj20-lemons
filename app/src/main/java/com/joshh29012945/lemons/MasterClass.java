@@ -1,17 +1,10 @@
 package com.joshh29012945.lemons;
 
-import android.graphics.Bitmap;
-
 /**
  * Superclass for all drawable things. It contains a bitmap for its texture
  * coordinates, tag and isDead bool
  */
 public abstract class MasterClass {
-    /**
-     * Holds bitmap image to represent the object
-     */
-    public static Bitmap image = null;
-
     /**
      * position of the current object
      */

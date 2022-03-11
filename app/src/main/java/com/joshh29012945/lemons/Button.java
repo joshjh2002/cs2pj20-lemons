@@ -56,8 +56,7 @@ public class Button extends Object {
 
     @Override
     public void OnCollide(MasterClass masterClass) {
-        Lemon lemon = (Lemon) masterClass;
-        active_lemon = lemon;
+        active_lemon = (Lemon) masterClass;
         linked_object.OnButtonPressed();
     }
 

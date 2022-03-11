@@ -10,8 +10,8 @@ public class Door extends Object {
     /**
      * Takes an x and y position as inputs.
      *
-     * @param x
-     * @param y
+     * @param x - coordinate
+     * @param y - coordinate
      */
     public Door(int x, int y) {
         super(x, y, 32, 64);

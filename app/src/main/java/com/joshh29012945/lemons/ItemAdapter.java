@@ -1,5 +1,6 @@
 package com.joshh29012945.lemons;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +10,14 @@ import android.widget.TextView;
 
 public class ItemAdapter extends BaseAdapter {
 
-    LayoutInflater mInflator;
+    LayoutInflater mInflater;
     String[] items;
     String[] descriptions;
 
     public ItemAdapter(Context c, String[] i, String[] d) {
         items = i;
         descriptions = d;
-        mInflator = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
 
@@ -37,7 +38,7 @@ public class ItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = mInflator.inflate(R.layout.activity_level_list, null);
+        @SuppressLint({"ViewHolder", "InflateParams"}) View v = mInflater.inflate(R.layout.activity_level_list, null);
         TextView nameTextView = v.findViewById(R.id.name_text_view);
         TextView descriptionTextView = v.findViewById(R.id.description_view);
 

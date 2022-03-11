@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+@SuppressLint("ViewConstructor")
 public class Game extends SurfaceView implements Runnable {
 
     /**
@@ -141,7 +142,7 @@ public class Game extends SurfaceView implements Runnable {
             InputStream is = context.getAssets().open(level);
             //size holds the number of bytes in the file
             int size = is.available();
-            //buffer is a list of all the charatcers
+            //buffer is a list of all the characters
             byte[] buffer = new byte[size];
 
             //checks if there are more than 0 lines in the file
@@ -401,7 +402,7 @@ public class Game extends SurfaceView implements Runnable {
      * Checks if the game has ended. If it has, the thread will be stopped
      */
     private void CheckWon() {
-        // if ther are no more lemons alive and in the buffer, the game has finished
+        // if there are no more lemons alive and in the buffer, the game has finished
         if (lemons.size() == 0 && lemons_buffer.size() == 0) {
             is_running = false;
             // to win, at least 75% of the total lemons must reach the exit

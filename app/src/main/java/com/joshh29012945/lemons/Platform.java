@@ -3,7 +3,7 @@ package com.joshh29012945.lemons;
 import android.graphics.Color;
 
 /**
- * A platform is a collidable object that the lemons can walk on
+ * A platform is object that the lemons can walk on
  */
 public class Platform extends Object {
     /**

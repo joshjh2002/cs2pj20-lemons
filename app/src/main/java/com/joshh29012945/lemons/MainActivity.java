@@ -10,10 +10,9 @@ import android.widget.Button;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
-    public static final int PICKFILE_RESULT_CODE = 1;
-    private Uri fileUri;
-    private String filePath = "TestLevel.txt";
+    public static final int PICK_FILE_RESULT_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null)
+            actionBar.hide();
 
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
@@ -34,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
         Button startBtn = findViewById(R.id.StartGameBtn);
         startBtn.setOnClickListener(e -> {
             finish();
-            /*Intent switchActivityIntent = new Intent(this, GameWindow.class);
-            switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            switchActivityIntent.putExtra("level", filePath);
-            startActivity(switchActivityIntent);
-             */
             Intent switchActivityIntent = new Intent(this, LevelSelect.class);
             switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(switchActivityIntent);
@@ -46,27 +41,24 @@ public class MainActivity extends AppCompatActivity {
 
 
         Button pickBtn = findViewById(R.id.LoadFileBtn);
-        pickBtn.setOnClickListener(e ->{
+        pickBtn.setOnClickListener(e -> {
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
             chooseFile.setType("*/*");
             chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-            startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+            startActivityForResult(chooseFile, PICK_FILE_RESULT_CODE);
         });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PICKFILE_RESULT_CODE:
-                if (resultCode == -1) {
-                    fileUri = data.getData();
-                    filePath = fileUri.getPath();
-                    Button pickBtn = findViewById(R.id.LoadFileBtn);
-                    pickBtn.setText(filePath);
-                }
-
-                break;
+        if (requestCode == PICK_FILE_RESULT_CODE) {
+            if (resultCode == -1) {
+                Uri fileUri = data.getData();
+                String filePath = fileUri.getPath();
+                Button pickBtn = findViewById(R.id.LoadFileBtn);
+                pickBtn.setText(filePath);
+            }
         }
     }
 }

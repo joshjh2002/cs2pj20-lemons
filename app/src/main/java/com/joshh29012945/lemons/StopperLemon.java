@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
  */
 public class StopperLemon extends StandardLemon {
     public static Bitmap image;
-    float touchCooldown = 0.3f;
+    float touchCoolDown = 0.3f;
     float touchRunningTotal = 1f;
 
     public StopperLemon(int x, int y) {
@@ -23,7 +23,7 @@ public class StopperLemon extends StandardLemon {
 
     @Override
     public void OnTouch() {
-        if (touchCooldown <= touchRunningTotal) {
+        if (touchCoolDown <= touchRunningTotal) {
             this.canMove = !this.canMove;
             touchRunningTotal = 0f;
         }
