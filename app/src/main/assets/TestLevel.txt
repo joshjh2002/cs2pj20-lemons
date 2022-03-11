@@ -1,7 +1,13 @@
 StandardLemon 0 0
+StandardLemon 0 0
+StandardLemon 0 0
+StandardLemon 0 0
 Platform 300 300 500 45
 Platform 300 0 45 300
 Platform 800 600 445 45
 Platform 1200 300 45 345
+JumpPad 900 900 96 96
+JumpPad 600 900 96 96
 Exit 900 472
 Spawner 340 235 2
+LavaPit 800 200 250 100

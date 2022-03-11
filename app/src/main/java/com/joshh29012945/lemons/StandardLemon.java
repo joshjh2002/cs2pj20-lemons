@@ -27,4 +27,9 @@ public class StandardLemon extends Lemon {
     public void OnCreate() {
 
     }
+
+    @Override
+    public void OnTouch() {
+
+    }
 }

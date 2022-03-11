@@ -33,6 +33,11 @@ public class Game extends SurfaceView implements Runnable {
     ArrayList<Object> objects;
 
     /**
+     * Holds a counter that stores the number of lemons created on level load
+     */
+    int lemonCount;
+
+    /**
      * Paint object to draw text to screen
      */
     Paint myPaint;
@@ -74,14 +79,18 @@ public class Game extends SurfaceView implements Runnable {
      * True when someone is touching the screen
      */
     static Boolean touching = false;
+    int touchX = -100, touchY = -100;
+    Rect touchRect;
+    boolean DEBUG = true;
     /**
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
     static float frame_time = 0;
 
+    /**
+     * Holds the reason for leaving the level. Can be either pass, fail or quit
+     */
     ExitReason exitReason;
-
-    int lemonCount;
 
     /**
      * Takes Context as a parameter. Creates a new "Game" and adds in all objects stored in asset file
@@ -96,20 +105,33 @@ public class Game extends SurfaceView implements Runnable {
         lemons = new ArrayList<>();
         lemonsBuffer = new ArrayList<>();
         objects = new ArrayList<>();
+
+        touchRect = new Rect();
+
         if (level == null) {
             level = "TestLevel.txt";
         }
         //This will try to load the file it points to. If not, the thread will terminate and the level passed screen will show
         try {
+            //Creates an InputStream using from the levels found in the assets folder
             InputStream is = context.getAssets().open(level);
+            //size holds the number of bytes in the file
             int size = is.available();
+            //buffer is a list of all the charatcers
             byte[] buffer = new byte[size];
+
+            //checks if there are more than 0 lines in the file
             if (is.read(buffer) > 0) {
+                //converts the buffer to a string
                 String text = new String(buffer);
                 text = text.trim();
+
+                //splits each line into a separate index in the array
                 String[] lines = text.split("\n");
 
+                //cycle through each line
                 for (String s : lines) {
+                    //split the line up by a space
                     String[] parts = s.trim().split(" ");
                     switch (parts[0]) {
                         case "StandardLemon":
@@ -129,9 +151,16 @@ public class Game extends SurfaceView implements Runnable {
                         case "Spawner":
                             objects.add(new Spawner(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), this, Integer.parseInt(parts[3])));
                             break;
+                        case "LavaPit":
+                            objects.add(new LavaPit(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
+                            break;
+                        case "Button":
+                            objects.add(new Button(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), objects.get(Integer.parseInt(parts[3]) - lemonsBuffer.size() - 1)));
+                            break;
                     }
                 }
             }
+            //closes the stream
             is.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,8 +223,17 @@ public class Game extends SurfaceView implements Runnable {
         //Clears the Canvas
         tmp.drawRect(0, 0, 1920, 1080, myPaint);
 
+
+        if (DEBUG) {
+            myPaint.setColor(Color.BLACK);
+            //tmp.drawCircle(touchX, touchY, 40, myPaint);
+            tmp.drawRect(touchRect, myPaint);
+        }
+
         for (Object object : objects) {
             switch (object.tag) {
+                case BUTTON:
+                case LAVA:
                 case DOOR:
                 case JUMP:
                 case EXIT:
@@ -241,6 +279,14 @@ public class Game extends SurfaceView implements Runnable {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touching = true;
+                this.touchX = x;
+                this.touchY = y;
+
+                touchRect.top = y - 20;
+                touchRect.left = x - 20;
+                touchRect.bottom = y + 20;
+                touchRect.right = x + 20;
+
                 if (x > getWidth() - 150f && y < 150f) {
                     running = false;
                     exitReason = ExitReason.QUIT;
@@ -305,7 +351,8 @@ public class Game extends SurfaceView implements Runnable {
     private void CheckCollision() {
         //Lemons do not collide with each other, not do objects. So only check for collision between lemons and objects exclusively
         for (Lemon lemon : lemons) {
-            Rect lemonRect = new Rect((int) lemon.x, (int) lemon.y, (int) lemon.x + lemon.w, (int) lemon.y + lemon.h);
+            Rect lemonRect = new Rect((int) lemon.x, (int) lemon.y,
+                    (int) lemon.x + lemon.w, (int) lemon.y + lemon.h);
             boolean collisionFound = false;
             for (Object object : objects) {
                 Rect objectRect = new Rect((int) object.x, (int) object.y,
@@ -317,6 +364,33 @@ public class Game extends SurfaceView implements Runnable {
             }
             lemon.isColliding = collisionFound;
         }
+
+        // Checks if the player is touching an object or lemon.
+        // This can be used to activate switches and interact with lemons
+        // Lemons take precedence over objects. Only one object can be touched
+        // At a time
+        if (touching) {
+            boolean touchedItem = false;
+            for (Lemon lemon : lemons) {
+                Rect lemonRect = new Rect((int) lemon.x, (int) lemon.y,
+                        (int) lemon.x + lemon.w, (int) lemon.y + lemon.h);
+                if (lemonRect.intersect(touchRect)) {
+                    lemon.OnTouch();
+                    touchedItem = true;
+                    break;
+                }
+            }
+
+            if (!touchedItem)
+                for (Object object : objects) {
+                    Rect objectRect = new Rect((int) object.x, (int) object.y,
+                            (int) object.x + object.w, (int) object.y + object.h);
+                    if (objectRect.intersect(touchRect)) {
+                        object.OnTouch();
+                        break;
+                    }
+                }
+        }
     }
 
     /**
@@ -326,9 +400,15 @@ public class Game extends SurfaceView implements Runnable {
         for (int i = 0; i < lemons.size(); i++) {
             Lemon lemon = lemons.get(i);
 
+            if (lemon.isLeft) {
+                lemon.OnDeath();
+                RemoveLemon(lemon);
+                i--;
+                score++;
+                continue;
+            }
             if (lemon.isDead) {
                 lemon.OnDeath();
-                score++;
                 RemoveLemon(lemon);
                 i--;
                 continue;

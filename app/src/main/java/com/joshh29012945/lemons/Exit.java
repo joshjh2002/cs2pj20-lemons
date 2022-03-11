@@ -28,6 +28,11 @@ public class Exit extends Object {
     }
 
     @Override
+    public void OnTouch() {
+
+    }
+
+    @Override
     public void OnCollide(MasterClass masterClass) {
 
     }

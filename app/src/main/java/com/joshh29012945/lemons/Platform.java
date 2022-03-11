@@ -36,6 +36,11 @@ public class Platform extends Object {
     }
 
     @Override
+    public void OnTouch() {
+
+    }
+
+    @Override
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
         lemon.isColliding = true;

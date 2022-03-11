@@ -4,6 +4,7 @@ package com.joshh29012945.lemons;
  * Superclass for all lemons. Holds basic functions of each lemon
  */
 public abstract class Lemon extends MasterClass {
+    public boolean isLeft;
     /**
      * Determines movement direction
      */
@@ -34,6 +35,8 @@ public abstract class Lemon extends MasterClass {
      */
     float jumpHeight = 0;
 
+    boolean canMove = true;
+
     public Lemon(int x, int y, int w, int h) {
         super(x, y, w, h);
     }
@@ -56,12 +59,16 @@ public abstract class Lemon extends MasterClass {
             timeJumping = 0;
         }
 
+        if (canMove)
+            this.x += dx * direction * Game.frame_time;
+
         this.y += dy * jumping * Game.frame_time;
-        this.x += dx * direction * Game.frame_time;
+
     }
 
     public void jump(float jumpHeightInSeconds) {
         jumping = -1;
         jumpHeight = jumpHeightInSeconds;
     }
+
 }

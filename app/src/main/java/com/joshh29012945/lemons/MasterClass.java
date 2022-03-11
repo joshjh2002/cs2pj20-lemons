@@ -63,4 +63,9 @@ public abstract class MasterClass {
      * Called from the constructor. Executes every time a new lemon is created
      */
     public abstract void OnCreate();
+
+    /**
+     * Called when clicked
+     */
+    public abstract void OnTouch();
 }

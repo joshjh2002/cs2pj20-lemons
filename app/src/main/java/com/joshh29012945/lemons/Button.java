@@ -1,12 +1,15 @@
 package com.joshh29012945.lemons;
 
+import android.graphics.Color;
+
 public class Button extends Object {
     Object linked_object;
 
     public Button(int x, int y, Object linked_object) {
-        super(x, y, 32, 16);
+        super(x, y, 64, 16);
         this.linked_object = linked_object;
         tag = Tag.BUTTON;
+        paint.setColor(Color.rgb(255, 150,150));
     }
 
     @Override
@@ -21,6 +24,11 @@ public class Button extends Object {
 
     @Override
     public void OnCreate() {
+
+    }
+
+    @Override
+    public void OnTouch() {
 
     }
 

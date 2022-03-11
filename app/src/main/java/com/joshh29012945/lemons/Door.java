@@ -22,7 +22,7 @@ public class Door extends Object {
     @Override
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
-        lemon.isDead = true;
+        lemon.isLeft = true;
     }
 
     @Override
@@ -42,6 +42,11 @@ public class Door extends Object {
 
     @Override
     public void OnCreate() {
+
+    }
+
+    @Override
+    public void OnTouch() {
 
     }
 }
