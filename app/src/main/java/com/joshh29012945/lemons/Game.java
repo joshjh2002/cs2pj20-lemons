@@ -27,79 +27,94 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * Lemon list of current "alive" lemons
      */
-    ArrayList<Lemon> lemons;
+    private ArrayList<Lemon> lemons;
     /**
      * Lemon list of all lemons currently not on the screen. These will gradually be moved to "lemons" by the spawner
      */
-    ArrayList<Lemon> lemons_buffer;
+    private ArrayList<Lemon> lemons_buffer;
+
+    public void AddLemon(float x, float y)
+    {
+        if (lemons_buffer.size() > 0) {
+            Lemon lemon = lemons_buffer.get(0);
+            lemon.x = x;
+            lemon.y = y;
+            lemons.add(lemon);
+            lemons_buffer.remove(0);
+        }
+    }
     /**
      * A list of all "alive" objects
      */
-    ArrayList<Object> objects;
+    private ArrayList<Object> objects;
 
     /**
      * Holds a counter that stores the number of lemons created on level load
      */
-    int lemon_count;
+    private int lemon_count;
 
     /**
      * Paint object to draw text to screen
      */
-    Paint paint;
+    private Paint paint;
 
     /**
      * Determines the state of the run thread. If false, the thread will stop and the game will end
      */
-    Boolean is_running;
+    private Boolean is_running;
     /**
      * Temporary canvas to draw each frame to
      */
-    Canvas tmp;
+    private Canvas tmp;
     /**
      * The bitmap tmp will draw to
      */
-    Bitmap frame;
+    private Bitmap frame;
     /**
      * The destination of the frame, so if the screen is smaller than 1920*1080, I can scale the image down
      */
-    Rect frame_dest_rect;
+    private Rect frame_dest_rect;
     /**
      * Collision rectangle for the lemon
      */
-    Rect lemon_rect;
+    private Rect lemon_rect;
     /**
      * Collision rectangle for the object
      */
-    Rect object_rect;
+    private Rect object_rect;
     /**
      * Score
      */
-    int score;
+    private int score;
 
     /**
      * True when someone is touching the screen
      */
-    static Boolean touching = false;
+    private static Boolean touching = false;
 
     /**
      * Current x and y position of the touch
      */
-    int touchX = -100, touchY = -100;
+    private int touchX = -100, touchY = -100;
 
     /**
      * A rectangle that will hold the x and y touch position.
      * If this rectangle collides with an object, then you have touched that object
      */
-    Rect touch_rect;
+    private Rect touch_rect;
 
     /**
      * If true, then will be used to debug certain elements. Like drawing the touch location
      */
-    boolean DEBUG = true;
+    private boolean DEBUG = true;
     /**
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
-    static float frame_time = 0;
+    private static float frame_time = 0;
+    public static float FrameTime()
+    {
+        return frame_time;
+    }
 
     /**
      * Holds how long the game has currently been running for
@@ -109,7 +124,7 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * Holds the reason for leaving the level. Can be either pass, fail or quit
      */
-    ExitReason exit_reason;
+    private ExitReason exit_reason;
 
     /**
      * Used to format the time remaining
@@ -133,6 +148,34 @@ public class Game extends SurfaceView implements Runnable {
         touch_rect = new Rect();
         run_time = 0;
 
+        //Initialises the frame bitmap and creates a canvas so I can draw to the bitmap
+        frame = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
+        tmp = new Canvas(frame);
+        frame_dest_rect = new Rect();
+        frame_dest_rect.top = 0;
+        frame_dest_rect.left = 0;
+        frame_dest_rect.bottom = 720;
+        frame_dest_rect.right = 1280;
+
+        //Initialises the collision rectangles
+        lemon_rect = new Rect();
+        object_rect = new Rect();
+
+        //Sets score to 0
+        score = 0;
+        exit_reason = null;
+
+        is_running = true;
+
+        LoadLevel(level, context);
+
+        lemon_count = lemons_buffer.size();
+
+        LoadImages();
+
+    }
+
+    private void LoadLevel(String level, Context context) {
         if (level == null) {
             level = "TestLevel.txt";
         }
@@ -195,29 +238,6 @@ public class Game extends SurfaceView implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        lemon_count = lemons_buffer.size();
-
-        LoadImages();
-
-        //Initialises the frame bitmap and creates a canvas so I can draw to the bitmap
-        frame = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
-        tmp = new Canvas(frame);
-        frame_dest_rect = new Rect();
-        frame_dest_rect.top = 0;
-        frame_dest_rect.left = 0;
-        frame_dest_rect.bottom = 720;
-        frame_dest_rect.right = 1280;
-
-        //Initialises the collision rectangles
-        lemon_rect = new Rect();
-        object_rect = new Rect();
-
-        //Sets score to 0
-        score = 0;
-        exit_reason = null;
-
-        is_running = true;
     }
 
     private void LoadImages() {

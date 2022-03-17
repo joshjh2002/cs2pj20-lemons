@@ -18,7 +18,7 @@ public class StopperLemon extends StandardLemon {
     @Override
     public void Update() {
         super.Update();
-        touchRunningTotal += Game.frame_time;
+        touchRunningTotal += Game.FrameTime();
     }
 
     @Override

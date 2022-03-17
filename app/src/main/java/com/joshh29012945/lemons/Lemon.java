@@ -51,7 +51,7 @@ public abstract class Lemon extends MasterClass {
         }
 
         if (jumping == -1) {
-            timeJumping += Game.frame_time;
+            timeJumping += Game.FrameTime();
             if (timeJumping >= jumpHeight) {
                 jumping = 1;
             }
@@ -60,9 +60,9 @@ public abstract class Lemon extends MasterClass {
         }
 
         if (canMove)
-            this.x += dx * direction * Game.frame_time;
+            this.x += dx * direction * Game.FrameTime();
 
-        this.y += dy * jumping * Game.frame_time;
+        this.y += dy * jumping * Game.FrameTime();
 
     }
 

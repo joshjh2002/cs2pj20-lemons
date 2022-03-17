@@ -30,14 +30,10 @@ public class Spawner extends Object {
 
     @Override
     public void Update() {
-        elapsed_time += Game.frame_time;
+        elapsed_time += Game.FrameTime();
 
-        if (currentGame.lemons_buffer.size() > 0 && elapsed_time >= spawn_delay) {
-            Lemon lemon = currentGame.lemons_buffer.get(0);
-            lemon.x = this.x;
-            lemon.y = this.y;
-            currentGame.lemons.add(lemon);
-            currentGame.lemons_buffer.remove(0);
+        if (elapsed_time >= spawn_delay) {
+            currentGame.AddLemon(this.x, this.y);
             elapsed_time = 0;
         }
     }
