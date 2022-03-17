@@ -1,11 +1,13 @@
+StopperLemon 0 0
 StandardLemon 0 0
 StandardLemon 0 0
 StandardLemon 0 0
-StandardLemon 0 0
-Platform 300 300 500 45
-Platform 1200 300 45 345
-JumpPad 900 900
-JumpPad 600 900
-Exit 900 472
-Spawner 340 235 2
+JumpPad 980 745 460
+Platform 300 800 800 45
+Platform 1100 600 500 45
+Platform 1055 455 45 200
+Exit 1500 472
+Spawner 340 735 2
+LavaPit 0 900 1920 180
+TouchedButton 120 120 8 
 TimeLimit 60

@@ -9,10 +9,13 @@ import android.graphics.Color;
 public class JumpPad extends Object {
     public static Bitmap image;
 
-    public JumpPad(int x, int y) {
+    float jump_height;
+
+    public JumpPad(int x, int y, float h) {
         super(x, y, 96, 55);
         paint.setColor(Color.BLUE);
         tag = Tag.JUMP;
+        jump_height = h;
     }
 
     @Override
@@ -39,8 +42,7 @@ public class JumpPad extends Object {
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
 
-        //Sets the jump time
-        lemon.jump(0.5f);
+        lemon.jump(jump_height);
     }
 
     @Override

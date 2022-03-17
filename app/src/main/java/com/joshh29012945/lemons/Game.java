@@ -33,8 +33,7 @@ public class Game extends SurfaceView implements Runnable {
      */
     private ArrayList<Lemon> lemons_buffer;
 
-    public void AddLemon(float x, float y)
-    {
+    public void AddLemon(float x, float y) {
         if (lemons_buffer.size() > 0) {
             Lemon lemon = lemons_buffer.get(0);
             lemon.x = x;
@@ -43,6 +42,7 @@ public class Game extends SurfaceView implements Runnable {
             lemons_buffer.remove(0);
         }
     }
+
     /**
      * A list of all "alive" objects
      */
@@ -111,8 +111,8 @@ public class Game extends SurfaceView implements Runnable {
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
     private static float frame_time = 0;
-    public static float FrameTime()
-    {
+
+    public static float FrameTime() {
         return frame_time;
     }
 
@@ -213,7 +213,7 @@ public class Game extends SurfaceView implements Runnable {
                                     Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
                             break;
                         case "JumpPad":
-                            objects.add(new JumpPad(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+                            objects.add(new JumpPad(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Float.parseFloat(parts[3])));
                             break;
                         case "Exit":
                             CreateExit(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
@@ -226,6 +226,9 @@ public class Game extends SurfaceView implements Runnable {
                             break;
                         case "Button":
                             objects.add(new Button(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), objects.get(Integer.parseInt(parts[3]) - lemons_buffer.size() - 1)));
+                            break;
+                        case "TouchedButton":
+                            objects.add(new TouchedButton(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), objects.get(Integer.parseInt(parts[3]) - lemons_buffer.size() - 1)));
                             break;
                         case "TimeLimit":
                             this.time_limit = Float.parseFloat(parts[1]);
@@ -323,6 +326,10 @@ public class Game extends SurfaceView implements Runnable {
                     case PLATFORM:
                         tmp.drawRect(object_rect, object.paint);
                         break;
+                    case TOUCH_BUTTON:
+                        tmp.drawRect(object_rect,object.paint);
+                        break;
+
                 }
             }
 
@@ -494,6 +501,15 @@ public class Game extends SurfaceView implements Runnable {
                         (int) lemon.x + lemon.w, (int) lemon.y + lemon.h);
                 if (lemonRect.intersect(touch_rect)) {
                     lemon.OnTouch();
+                    touchedItem = true;
+                    break;
+                }
+            }
+            for (Object object : objects) {
+                Rect objectRect = new Rect((int) object.x, (int) object.y,
+                        (int) object.x + object.w, (int) object.y + object.h);
+                if (objectRect.intersect(touch_rect)) {
+                    object.OnTouch();
                     touchedItem = true;
                     break;
                 }

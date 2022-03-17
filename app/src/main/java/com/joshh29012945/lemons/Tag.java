@@ -12,5 +12,6 @@ public enum Tag {
     DOOR,
     SPAWNER,
     BUTTON,
-    LAVA
+    LAVA,
+    TOUCH_BUTTON
 }

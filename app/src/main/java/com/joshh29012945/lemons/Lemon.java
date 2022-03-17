@@ -1,5 +1,7 @@
 package com.joshh29012945.lemons;
 
+import android.util.Log;
+
 /**
  * Superclass for all lemons. Holds basic functions of each lemon
  */
@@ -26,11 +28,6 @@ public abstract class Lemon extends MasterClass {
     int jumping = 1;
 
     /**
-     * Time the lemon will jump for in seconds
-     */
-    float timeJumping = 0;
-
-    /**
      * Height of jump
      */
     float jumpHeight = 0;
@@ -51,12 +48,10 @@ public abstract class Lemon extends MasterClass {
         }
 
         if (jumping == -1) {
-            timeJumping += Game.FrameTime();
-            if (timeJumping >= jumpHeight) {
+            dy = 300;
+            if (this.y <= jumpHeight) {
                 jumping = 1;
             }
-        } else {
-            timeJumping = 0;
         }
 
         if (canMove)
@@ -66,9 +61,9 @@ public abstract class Lemon extends MasterClass {
 
     }
 
-    public void jump(float jumpHeightInSeconds) {
+    public void jump(float jumpToY) {
         jumping = -1;
-        jumpHeight = jumpHeightInSeconds;
+        jumpHeight =  jumpToY;
     }
 
 }
