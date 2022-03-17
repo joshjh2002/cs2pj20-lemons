@@ -8,22 +8,22 @@ public abstract class MasterClass {
     /**
      * position of the current object
      */
-    float x, y;
+    public float x, y;
 
     /**
      * Size of the current object
      */
-    int w, h;
+    public int w, h;
 
     /**
      * Defines what the class represents. Used to determine what object something is easily
      */
-    Tag tag;
+    public Tag tag;
 
     /**
      * Determines if the object is dead. False by default.
      */
-    boolean isDead;
+    public boolean isDead;
 
     /**
      * Creates a platform object
@@ -50,7 +50,7 @@ public abstract class MasterClass {
     /**
      * Called on death. Used in very specific circumstances
      */
-    public abstract void OnDeath();
+    protected abstract void OnDeath();
 
     /**
      * Called from the constructor. Executes every time a new lemon is created
