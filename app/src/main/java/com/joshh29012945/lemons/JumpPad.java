@@ -1,13 +1,16 @@
 package com.joshh29012945.lemons;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 /**
  * When collided with, a lemon will jump
  */
 public class JumpPad extends Object {
-    public JumpPad(int x, int y, int w, int h) {
-        super(x, y, w, h);
+    public static Bitmap image;
+
+    public JumpPad(int x, int y) {
+        super(x, y, 96, 55);
         paint.setColor(Color.BLUE);
         tag = Tag.JUMP;
     }

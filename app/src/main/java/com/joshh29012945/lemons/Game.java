@@ -170,8 +170,7 @@ public class Game extends SurfaceView implements Runnable {
                                     Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
                             break;
                         case "JumpPad":
-                            objects.add(new JumpPad(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
-                                    Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
+                            objects.add(new JumpPad(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
                             break;
                         case "Exit":
                             CreateExit(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
@@ -198,12 +197,8 @@ public class Game extends SurfaceView implements Runnable {
         }
 
         lemon_count = lemons_buffer.size();
-        //Add images for all relevant classes
-        StandardLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
-                R.drawable.lemon);
 
-        StopperLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
-                R.drawable.stopper);
+        LoadImages();
 
         //Initialises the frame bitmap and creates a canvas so I can draw to the bitmap
         frame = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
@@ -223,6 +218,24 @@ public class Game extends SurfaceView implements Runnable {
         exit_reason = null;
 
         is_running = true;
+    }
+
+    private void LoadImages() {
+        //Add images for all relevant classes
+        StandardLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.lemon);
+
+        StopperLemon.image = BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.stopper);
+
+        Exit.image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.exit);
+
+        Button.image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.button);
+        Button.image_pressed = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.button_pressed);
+
+        LavaPit.image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.lava);
+
+        JumpPad.image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.jump);
     }
 
     /**
@@ -267,17 +280,27 @@ public class Game extends SurfaceView implements Runnable {
         //Draws all objects, provided that object is not "dead"
         for (Object object : objects) {
             if (!object.isDead) {
+                object_rect.left = (int) object.x;
+                object_rect.top = (int) object.y;
+                object_rect.right = (int) object.x + object.w;
+                object_rect.bottom = (int) object.y + object.h;
                 switch (object.tag) {
-                    case BUTTON:
-                    case LAVA:
-                    case DOOR:
-                    case JUMP:
                     case EXIT:
+                        tmp.drawBitmap(Exit.image, null, object_rect, null);
+                        break;
+                    case BUTTON:
+                        if (!((Button) object).isPressed())
+                            tmp.drawBitmap(Button.image, null, object_rect, null);
+                        else
+                            tmp.drawBitmap(Button.image_pressed, null, object_rect, null);
+                        break;
+                    case LAVA:
+                        tmp.drawBitmap(LavaPit.image, object_rect, object_rect, null);
+                        break;
+                    case JUMP:
+                        tmp.drawBitmap(JumpPad.image, null, object_rect, null);
+                        break;
                     case PLATFORM:
-                        object_rect.left = (int) object.x;
-                        object_rect.top = (int) object.y;
-                        object_rect.right = (int) object.x + object.w;
-                        object_rect.bottom = (int) object.y + object.h;
                         tmp.drawRect(object_rect, object.paint);
                         break;
                 }
@@ -336,10 +359,10 @@ public class Game extends SurfaceView implements Runnable {
 
                 this.touchY = (int) event.getY();
 
-                touch_rect.top = touchY - 20;
-                touch_rect.left = touchX - 20;
-                touch_rect.bottom = touchY + 20;
-                touch_rect.right = touchX + 20;
+                touch_rect.top = touchY - 30;
+                touch_rect.left = touchX - 30;
+                touch_rect.bottom = touchY + 30;
+                touch_rect.right = touchX + 30;
 
                 // Checks if the user has pressed the Quit button
                 if (touchX > getWidth() - 150f && touchY < 150f) {

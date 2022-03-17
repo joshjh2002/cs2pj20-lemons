@@ -1,11 +1,13 @@
 package com.joshh29012945.lemons;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 /**
  * When collided with, the lemon will die
  */
 public class LavaPit extends Object {
+    public static Bitmap image;
 
     public LavaPit(int x, int y, int w, int h) {
         super(x, y, w, h);

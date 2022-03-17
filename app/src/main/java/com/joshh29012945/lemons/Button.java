@@ -1,24 +1,34 @@
 package com.joshh29012945.lemons;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 
 public class Button extends Object {
+
+    public static Bitmap image;
+    public static Bitmap image_pressed;
+
     /**
      * Holds a reference to the object that the button is linked to
      */
-    Object linked_object;
+    private Object linked_object;
 
     /**
      * Holds a reference to the lemon currently pressing the button
      */
-    Lemon active_lemon;
+    private Lemon active_lemon;
 
     public Button(int x, int y, Object linked_object) {
         super(x, y, 64, 16);
         this.linked_object = linked_object;
         tag = Tag.BUTTON;
         paint.setColor(Color.rgb(255, 150, 150));
+    }
+
+    public boolean isPressed()
+    {
+        return active_lemon != null;
     }
 
     @Override

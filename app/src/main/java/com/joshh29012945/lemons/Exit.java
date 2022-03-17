@@ -1,11 +1,14 @@
 package com.joshh29012945.lemons;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 /**
  * Exit object does nothing. It shows a door object.
  */
 public class Exit extends Object {
+    public static Bitmap image;
+
     public Exit(int x, int y) {
         super(x, y, 96, 128);
         tag = Tag.EXIT;
