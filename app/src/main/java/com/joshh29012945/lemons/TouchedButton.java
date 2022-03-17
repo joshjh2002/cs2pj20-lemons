@@ -6,9 +6,6 @@ import android.graphics.Rect;
 
 public class TouchedButton extends Object {
 
-    public static Bitmap image;
-    public static Bitmap image_pressed;
-
     /**
      * Holds a reference to the object that the button is linked to
      */
@@ -17,11 +14,6 @@ public class TouchedButton extends Object {
     private boolean state;
 
     private float time_since_press;
-
-    public boolean State() {
-        return state;
-    }
-
 
     public TouchedButton(int x, int y, Object linked_object) {
         super(x, y, 100, 100);
