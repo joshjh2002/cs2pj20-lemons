@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Button pickBtn = findViewById(R.id.LoadFileBtn);
         pickBtn.setOnClickListener(e -> {
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-            chooseFile.setType("*/*");
+            chooseFile.setType("text/plain");
             chooseFile = Intent.createChooser(chooseFile, "Choose a file");
             startActivityForResult(chooseFile, PICK_FILE_RESULT_CODE);
         });

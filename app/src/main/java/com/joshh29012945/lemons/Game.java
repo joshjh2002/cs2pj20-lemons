@@ -1,6 +1,8 @@
 package com.joshh29012945.lemons;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -284,8 +286,16 @@ public class Game extends SurfaceView implements Runnable {
             //closes the stream
             if (is != null)
                 is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            alertDialogBuilder.setMessage("Could not load level. Check that the level is formatted correctly. Returning to main menu.");
+            alertDialogBuilder.setTitle("Failed to load level");
+            alertDialogBuilder.create();
+            alertDialogBuilder.show();
+
+            Intent switchActivityIntent = new Intent(context, MainActivity.class);
+            switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(switchActivityIntent);
         }
     }
 
