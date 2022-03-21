@@ -26,8 +26,6 @@ public class LevelSelect extends AppCompatActivity {
     ListView myListView;
     String[] name;
     String[] descriptions;
-    String[] highScore;
-    String currentScore = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

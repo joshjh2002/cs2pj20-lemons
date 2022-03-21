@@ -9,9 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +30,11 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * Lemon list of current "alive" lemons
      */
-    private ArrayList<Lemon> lemons;
+    private final ArrayList<Lemon> lemons;
     /**
      * Lemon list of all lemons currently not on the screen. These will gradually be moved to "lemons" by the spawner
      */
-    private ArrayList<Lemon> lemons_buffer;
+    private final ArrayList<Lemon> lemons_buffer;
 
     public void AddLemon(float x, float y) {
         if (lemons_buffer.size() > 0) {
@@ -47,17 +49,17 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * A list of all "alive" objects
      */
-    private ArrayList<Object> objects;
+    private final ArrayList<Object> objects;
 
     /**
      * Holds a counter that stores the number of lemons created on level load
      */
-    private int lemon_count;
+    private final int lemon_count;
 
     /**
      * Paint object to draw text to screen
      */
-    private Paint paint;
+    private final Paint paint;
 
     /**
      * Determines the state of the run thread. If false, the thread will stop and the game will end
@@ -66,23 +68,23 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * Temporary canvas to draw each frame to
      */
-    private Canvas tmp;
+    private final Canvas tmp;
     /**
      * The bitmap tmp will draw to
      */
-    private Bitmap frame;
+    private final Bitmap frame;
     /**
      * The destination of the frame, so if the screen is smaller than 1920*1080, I can scale the image down
      */
-    private Rect frame_dest_rect;
+    private final Rect frame_dest_rect;
     /**
      * Collision rectangle for the lemon
      */
-    private Rect lemon_rect;
+    private final Rect lemon_rect;
     /**
      * Collision rectangle for the object
      */
-    private Rect object_rect;
+    private final Rect object_rect;
     /**
      * Score
      */
@@ -102,12 +104,12 @@ public class Game extends SurfaceView implements Runnable {
      * A rectangle that will hold the x and y touch position.
      * If this rectangle collides with an object, then you have touched that object
      */
-    private Rect touch_rect;
+    private final Rect touch_rect;
 
     /**
      * If true, then will be used to debug certain elements. Like drawing the touch location
      */
-    private boolean DEBUG = true;
+    private final boolean DEBUG = true;
     /**
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
@@ -132,13 +134,33 @@ public class Game extends SurfaceView implements Runnable {
      */
     private static final DecimalFormat time_formatter = new DecimalFormat("00");
 
+    private final String name;
+    private int highScore;
+
     /**
      * Takes Context as a parameter. Creates a new "Game" and adds in all objects stored in asset file
      *
      * @param context the current context the game is ran in
      */
-    public Game(Context context, String level, boolean isExternal) {
+    public Game(Context context, String level, boolean isExternal, String name) {
         super(context);
+        this.name = name;
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://lemons-80393-default-rtdb.firebaseio.com/");
+        DatabaseReference myRef;
+        myRef = database.getReference(name).child("score");
+
+        myRef.get().addOnCompleteListener(y -> {
+            if (y.isSuccessful()) {
+                if (y.getResult().exists()) {
+                    highScore = Integer.parseInt(y.getResult().getValue().toString());
+                } else {
+
+                }
+            }
+
+        });
+
+
         //Initialises the paint, and arrays
         paint = new Paint();
 
@@ -418,6 +440,11 @@ public class Game extends SurfaceView implements Runnable {
                 break;
             case MotionEvent.ACTION_UP:
                 // When the user is no longer touching the screen
+                touch_rect.top = -100;
+                touch_rect.left = -100;
+                touch_rect.bottom = -101;
+                touch_rect.right = -101;
+
                 touching = false;
                 break;
         }
@@ -457,8 +484,15 @@ public class Game extends SurfaceView implements Runnable {
         else if (exit_reason == ExitReason.TIMEOUT)
             exitMessage = "Not Completed";
 
+        if (score > highScore && name != "") {
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://lemons-80393-default-rtdb.firebaseio.com/");
+            DatabaseReference myRef = null;
+            myRef = database.getReference(name).child("score");
+            myRef.setValue(score);
+        }
         // Actually switches activity
         switchActivityIntent.putExtra("pass_fail", exitMessage);
+        switchActivityIntent.putExtra("score", score + "");
         context.startActivity(switchActivityIntent);
     }
 

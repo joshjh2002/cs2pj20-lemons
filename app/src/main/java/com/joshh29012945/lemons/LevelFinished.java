@@ -34,10 +34,16 @@ public class LevelFinished extends AppCompatActivity {
         Intent intent = getIntent();
 
         String pass_fail = intent.getStringExtra("pass_fail");
+        String score = intent.getStringExtra("score");
 
         TextView textView = findViewById(R.id.level_finished_text);
         String out = getString(R.string.level_finished, pass_fail);
         textView.setText(out);
+
+        textView = findViewById(R.id.scoreTextView);
+        out = getString(R.string.score_text, score);
+        textView.setText(out);
+
 
         Button mainMenu = findViewById(R.id.returnBtn);
         mainMenu.setOnClickListener(e ->{
