@@ -151,10 +151,9 @@ public class Game extends SurfaceView implements Runnable {
 
         myRef.get().addOnCompleteListener(y -> {
             if (y.isSuccessful()) {
-                if (y.getResult().exists()) {
-                    highScore = Integer.parseInt(y.getResult().getValue().toString());
-                } else {
-
+                if (y.getResult() != null && y.getResult().exists()) {
+                    if (y.getResult() != null && y.getResult().getValue() != null)
+                        highScore = Integer.parseInt(y.getResult().getValue().toString());
                 }
             }
 
@@ -205,7 +204,7 @@ public class Game extends SurfaceView implements Runnable {
             //Creates an InputStream using from the levels found in the assets folder
             InputStream is = null;
             //size holds the number of bytes in the file
-            int size = 0;
+            int size;
             //buffer is a list of all the characters
             byte[] buffer = null;
 
@@ -221,7 +220,7 @@ public class Game extends SurfaceView implements Runnable {
             //checks if there are more than 0 lines in the file
             if (isExternal || is.read(buffer) > 0) {
                 //converts the buffer to a string
-                String text = "";
+                String text;
                 if (isExternal)
                     text = level;
                 else
@@ -361,8 +360,6 @@ public class Game extends SurfaceView implements Runnable {
                         tmp.drawBitmap(JumpPad.image, null, object_rect, null);
                         break;
                     case PLATFORM:
-                        tmp.drawRect(object_rect, object.paint);
-                        break;
                     case TOUCH_BUTTON:
                         tmp.drawRect(object_rect, object.paint);
                         break;
@@ -484,10 +481,9 @@ public class Game extends SurfaceView implements Runnable {
         else if (exit_reason == ExitReason.TIMEOUT)
             exitMessage = "Not Completed";
 
-        if (score > highScore && name != "") {
+        if (score > highScore && !name.equals("")) {
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://lemons-80393-default-rtdb.firebaseio.com/");
-            DatabaseReference myRef = null;
-            myRef = database.getReference(name).child("score");
+            DatabaseReference myRef = database.getReference(name).child("score");
             myRef.setValue(score);
         }
         // Actually switches activity
