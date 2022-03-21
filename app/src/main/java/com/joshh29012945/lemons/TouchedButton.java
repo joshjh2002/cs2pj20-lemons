@@ -3,6 +3,7 @@ package com.joshh29012945.lemons;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 
 public class TouchedButton extends Object {
 
@@ -14,6 +15,8 @@ public class TouchedButton extends Object {
     private boolean state;
 
     private float time_since_press;
+
+    public static MediaPlayer clickEffect;
 
     public TouchedButton(int x, int y, Object linked_object) {
         super(x, y, 100, 100);
@@ -54,6 +57,7 @@ public class TouchedButton extends Object {
         if (time_since_press >= 0.1f) {
             state = !state;
             time_since_press = 0;
+            clickEffect.start();
         }
     }
 

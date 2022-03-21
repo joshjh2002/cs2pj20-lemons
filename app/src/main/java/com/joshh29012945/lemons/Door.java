@@ -1,12 +1,14 @@
 package com.joshh29012945.lemons;
 
 import android.graphics.Color;
+import android.media.MediaPlayer;
 
 /**
  * This class creates a door object. This object has a collide function which will kill a lemon,
  * essentially leaving the world through that door.
  */
 public class Door extends Object {
+    public static MediaPlayer exitEffect;
     /**
      * Takes an x and y position as inputs.
      *
@@ -22,6 +24,8 @@ public class Door extends Object {
     @Override
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
+        if (!lemon.isLeft)
+            exitEffect.start();
         lemon.isLeft = true;
     }
 

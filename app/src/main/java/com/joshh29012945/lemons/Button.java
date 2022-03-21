@@ -3,11 +3,13 @@ package com.joshh29012945.lemons;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 
 public class Button extends Object {
 
     public static Bitmap image;
     public static Bitmap image_pressed;
+    public static MediaPlayer clickEffect;
 
     /**
      * Holds a reference to the object that the button is linked to
@@ -26,8 +28,7 @@ public class Button extends Object {
         paint.setColor(Color.rgb(255, 150, 150));
     }
 
-    public boolean isPressed()
-    {
+    public boolean isPressed() {
         return active_lemon != null;
     }
 
@@ -45,6 +46,7 @@ public class Button extends Object {
                 // If the are no longer colliding, reset the object the button is linked to
                 active_lemon = null;
                 linked_object.OnButtonPressedExit();
+
             }
         }
     }
@@ -66,6 +68,8 @@ public class Button extends Object {
 
     @Override
     public void OnCollide(MasterClass masterClass) {
+        if (active_lemon == null)
+            clickEffect.start();
         active_lemon = (Lemon) masterClass;
         linked_object.OnButtonPressed();
     }

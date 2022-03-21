@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -144,6 +145,7 @@ public class Game extends SurfaceView implements Runnable {
      */
     public Game(Context context, String level, boolean isExternal, String name) {
         super(context);
+
         this.name = name;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://lemons-80393-default-rtdb.firebaseio.com/");
         DatabaseReference myRef;
@@ -192,7 +194,15 @@ public class Game extends SurfaceView implements Runnable {
         lemon_count = lemons_buffer.size();
 
         LoadImages();
+        LoadSounds();
+    }
 
+    private void LoadSounds() {
+        JumpPad.jumpSound = MediaPlayer.create(getContext(), R.raw.jump);
+        Door.exitEffect = MediaPlayer.create(getContext(), R.raw.exit);
+        LavaPit.burnEffect = MediaPlayer.create(getContext(), R.raw.lava);
+        TouchedButton.clickEffect = MediaPlayer.create(getContext(), R.raw.click);
+        Button.clickEffect = MediaPlayer.create(getContext(), R.raw.click);
     }
 
     private void LoadLevel(String level, Context context, boolean isExternal) {
@@ -441,6 +451,7 @@ public class Game extends SurfaceView implements Runnable {
                 touch_rect.left = -100;
                 touch_rect.bottom = -101;
                 touch_rect.right = -101;
+                this.touchX = this.touchY = -100;
 
                 touching = false;
                 break;

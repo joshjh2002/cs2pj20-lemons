@@ -2,12 +2,14 @@ package com.joshh29012945.lemons;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 
 /**
  * When collided with, the lemon will die
  */
 public class LavaPit extends Object {
     public static Bitmap image;
+    public static MediaPlayer burnEffect;
 
     public LavaPit(int x, int y, int w, int h) {
         super(x, y, w, h);
@@ -38,6 +40,8 @@ public class LavaPit extends Object {
     @Override
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
+        if (!isDead)
+            burnEffect.start();
         lemon.isDead = true;
     }
 
