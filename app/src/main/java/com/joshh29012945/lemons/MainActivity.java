@@ -23,6 +23,9 @@ import java.io.InputStreamReader;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
+    /**
+     * Arbitrary code to identify the return of the file picker intent
+     */
     public static final int PICK_FILE_RESULT_CODE = 1;
 
     @Override
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
 
-
+        // Loads the level select activity
         Button startBtn = findViewById(R.id.StartGameBtn);
         startBtn.setOnClickListener(e -> {
             finish();
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(switchActivityIntent);
         });
 
-
+        // Loads custom level picker activity
         Button pickBtn = findViewById(R.id.LoadFileBtn);
         pickBtn.setOnClickListener(e -> {
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
@@ -76,10 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 while ((line = reader.readLine()) != null) {
                     builder.append(line + "\n");
                 }
-                // Do something with the content in
-                Button pickBtn = findViewById(R.id.LoadFileBtn);
-                pickBtn.setText(builder.toString());
 
+                // Loads custom level
                 Intent switchActivityIntent = new Intent(this, GameWindow.class);
                 switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 switchActivityIntent.putExtra("level", builder.toString());

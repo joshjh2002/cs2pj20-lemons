@@ -8,7 +8,15 @@ import android.media.MediaPlayer;
  * When collided with, the lemon will die
  */
 public class LavaPit extends Object {
+    /**
+     * Stores image for the lava pit. It's a large image so source
+     * and destination rectangles are the same, making each lava
+     * pit look different
+     */
     public static Bitmap image;
+    /**
+     * Plays when a lemon touches the lava
+     */
     public static MediaPlayer burnEffect;
 
     public LavaPit(int x, int y, int w, int h) {

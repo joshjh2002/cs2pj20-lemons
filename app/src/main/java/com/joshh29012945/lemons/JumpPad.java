@@ -8,9 +8,18 @@ import android.media.MediaPlayer;
  * When collided with, a lemon will jump
  */
 public class JumpPad extends Object {
+    /**
+     * Stores image for all jump pads
+     */
     public static Bitmap image;
+    /**
+     * Stores jump sound
+     */
     public static MediaPlayer jumpSound;
 
+    /**
+     * The height that the trampoline will bounce the player to
+     */
     float jump_height;
 
     public JumpPad(int x, int y, float h) {

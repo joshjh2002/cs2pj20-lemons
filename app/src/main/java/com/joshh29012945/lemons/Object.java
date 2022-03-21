@@ -24,7 +24,13 @@ public abstract class Object extends MasterClass {
      */
     public abstract void OnCollide(MasterClass masterClass);
 
+    /**
+     * Called when the button this object is linked to is pressed
+     */
     protected abstract void OnButtonPressed();
 
+    /**
+     * Called when the button is not pressed
+     */
     protected abstract void OnButtonPressedExit();
 }

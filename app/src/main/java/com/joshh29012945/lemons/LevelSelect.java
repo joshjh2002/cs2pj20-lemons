@@ -45,17 +45,20 @@ public class LevelSelect extends AppCompatActivity {
         setContentView(R.layout.activity_level_select);
 
         Resources res = getResources();
+        // gets the textviews
         myListView = findViewById(R.id.level_list_view);
         name = res.getStringArray(R.array.level_name);
-
-        //myListView.setAdapter(new ArrayAdapter<String>(this, R.layout.my_listView_detail, items)); we will update a better version
         descriptions = res.getStringArray(R.array.level_description);
 
+        //passed it into a new item adapter
         ItemAdapter itemAdapter = new ItemAdapter(this, name, descriptions);
+        //sets the adapter to the item
         myListView.setAdapter(itemAdapter);
 
+        //intialises context to it can be used inside listeners
         Context context = this;
 
+        // starts the level the player has selected
         myListView.setOnItemClickListener((parent, view, i, l) -> {
             Intent switchActivityIntent = new Intent(context, GameWindow.class);
             switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -64,6 +67,7 @@ public class LevelSelect extends AppCompatActivity {
 
         });
 
+        // returns the player to the main menu
         Button mainMenu = findViewById(R.id.to_main_menu);
         mainMenu.setOnClickListener(e -> {
             finish();

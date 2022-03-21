@@ -6,9 +6,17 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 
 public class Button extends Object {
-
+    /**
+     * Stores the default image of the button
+     */
     public static Bitmap image;
+    /**
+     * Stores the image of the button when pressed
+     */
     public static Bitmap image_pressed;
+    /**
+     * Stores a sound effect that is played when the button is pressed
+     */
     public static MediaPlayer clickEffect;
 
     /**

@@ -594,7 +594,7 @@ public class Game extends SurfaceView implements Runnable {
             Lemon lemon = lemons.get(i);
 
             // if lemon has left the level then it will remove it from thr list and increase score
-            if (lemon.isLeft) {
+            if (lemon.hasLeft) {
                 RemoveLemon(lemon);
                 i--;
                 score++;

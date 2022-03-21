@@ -7,6 +7,9 @@ import android.graphics.Color;
  * Exit object does nothing. It shows a door object.
  */
 public class Exit extends Object {
+    /**
+     * The image for the exit
+     */
     public static Bitmap image;
 
     public Exit(int x, int y) {

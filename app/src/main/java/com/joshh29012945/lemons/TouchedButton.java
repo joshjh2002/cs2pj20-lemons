@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 
+/**
+ * A button that can be activated by the player. Tap the screen to activate/deactivate it
+ */
 public class TouchedButton extends Object {
 
     /**

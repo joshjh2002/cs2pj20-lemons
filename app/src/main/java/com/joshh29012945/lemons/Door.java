@@ -8,6 +8,9 @@ import android.media.MediaPlayer;
  * essentially leaving the world through that door.
  */
 public class Door extends Object {
+    /**
+     * Stores sound effect that the door plays when collided with
+     */
     public static MediaPlayer exitEffect;
     /**
      * Takes an x and y position as inputs.
@@ -24,9 +27,9 @@ public class Door extends Object {
     @Override
     public void OnCollide(MasterClass masterClass) {
         Lemon lemon = (Lemon) masterClass;
-        if (!lemon.isLeft)
+        if (!lemon.hasLeft)
             exitEffect.start();
-        lemon.isLeft = true;
+        lemon.hasLeft = true;
     }
 
     @Override

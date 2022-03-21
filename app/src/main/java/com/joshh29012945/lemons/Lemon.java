@@ -6,7 +6,7 @@ import android.util.Log;
  * Superclass for all lemons. Holds basic functions of each lemon
  */
 public abstract class Lemon extends MasterClass {
-    public boolean isLeft;
+    public boolean hasLeft;
     /**
      * Determines movement direction
      */
@@ -32,6 +32,9 @@ public abstract class Lemon extends MasterClass {
      */
     float jumpHeight = 0;
 
+    /**
+     * decides whether the lemon can move. Is used in a few circumstances
+     */
     boolean canMove = true;
 
     public Lemon(int x, int y, int w, int h) {
@@ -40,15 +43,18 @@ public abstract class Lemon extends MasterClass {
 
     @Override
     public void Update() {
+        // if lemon is not colliding with anything, it should move 300px down and 150px across each second
         if (!isColliding) {
             dy = 300;
             dx = 150;
-        } else {
+        } else { //lemon only moves left and right when not falling
             dx = 200;
         }
 
+        //if the lemon is jumping (-1 for direction of gravity)
         if (jumping == -1) {
             dy = 300;
+            //continue to move up until it has reached jump height
             if (this.y <= jumpHeight) {
                 jumping = 1;
             }
@@ -57,13 +63,14 @@ public abstract class Lemon extends MasterClass {
         if (canMove)
             this.x += dx * direction * Game.FrameTime();
 
+        //lemon will always be effected by gravity
         this.y += dy * jumping * Game.FrameTime();
 
     }
 
     public void jump(float jumpToY) {
         jumping = -1;
-        jumpHeight =  jumpToY;
+        jumpHeight = jumpToY;
     }
 
 }
