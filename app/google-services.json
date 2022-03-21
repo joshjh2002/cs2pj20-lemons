@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "355126037516",
+    "project_id": "lemons-80393",
+    "storage_bucket": "lemons-80393.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355126037516:android:9f46ac594b7218fcea3229",
+        "android_client_info": {
+          "package_name": "com.joshh29012945.lemons"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355126037516-0v0ere3g3n4157qq5i04rls8fteu8plm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNzH0fCEx6WqRWVAAuNrYcXnV72e8Gxc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355126037516-0v0ere3g3n4157qq5i04rls8fteu8plm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
