@@ -27,8 +27,12 @@ public class GameWindow extends AppCompatActivity {
         if (actionBar != null)
             actionBar.hide();
 
+
         Intent intent = getIntent();
         String level = intent.getStringExtra("level");
+        String intentExternal = intent.getStringExtra("externalFile");
+        boolean isExternal = Boolean.parseBoolean(intentExternal);
+
         String file = null;
 
         switch (level) {
@@ -41,9 +45,13 @@ public class GameWindow extends AppCompatActivity {
             case "Level 3":
                 file = "Level3.txt";
                 break;
+            default:
+                if (isExternal)
+                    file = level;
+                break;
         }
 
-        Game game = new Game(this, file);
+        Game game = new Game(this, file, isExternal);
         game.setBackgroundColor(Color.WHITE);
 
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

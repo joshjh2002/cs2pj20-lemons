@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -136,7 +137,7 @@ public class Game extends SurfaceView implements Runnable {
      *
      * @param context the current context the game is ran in
      */
-    public Game(Context context, String level) {
+    public Game(Context context, String level, boolean isExternal) {
         super(context);
         //Initialises the paint, and arrays
         paint = new Paint();
@@ -154,8 +155,6 @@ public class Game extends SurfaceView implements Runnable {
         frame_dest_rect = new Rect();
         frame_dest_rect.top = 0;
         frame_dest_rect.left = 0;
-        frame_dest_rect.bottom = 720;
-        frame_dest_rect.right = 1280;
 
         //Initialises the collision rectangles
         lemon_rect = new Rect();
@@ -167,7 +166,7 @@ public class Game extends SurfaceView implements Runnable {
 
         is_running = true;
 
-        LoadLevel(level, context);
+        LoadLevel(level, context, isExternal);
 
         lemon_count = lemons_buffer.size();
 
@@ -175,23 +174,37 @@ public class Game extends SurfaceView implements Runnable {
 
     }
 
-    private void LoadLevel(String level, Context context) {
+    private void LoadLevel(String level, Context context, boolean isExternal) {
         if (level == null) {
             level = "TestLevel.txt";
         }
         //This will try to load the file it points to. If not, the thread will terminate and the level passed screen will show
         try {
             //Creates an InputStream using from the levels found in the assets folder
-            InputStream is = context.getAssets().open(level);
+            InputStream is = null;
             //size holds the number of bytes in the file
-            int size = is.available();
+            int size = 0;
             //buffer is a list of all the characters
-            byte[] buffer = new byte[size];
+            byte[] buffer = null;
+
+            if (!isExternal) {
+                is = context.getAssets().open(level);
+                //size holds the number of bytes in the file
+                size = is.available();
+                //buffer is a list of all the characters
+                buffer = new byte[size];
+            }
+
 
             //checks if there are more than 0 lines in the file
-            if (is.read(buffer) > 0) {
+            if (isExternal || is.read(buffer) > 0) {
                 //converts the buffer to a string
-                String text = new String(buffer);
+                String text = "";
+                if (isExternal)
+                    text = level;
+                else
+                    text = new String(buffer);
+
                 text = text.trim();
 
                 //splits each line into a separate index in the array
@@ -201,6 +214,7 @@ public class Game extends SurfaceView implements Runnable {
                 for (String s : lines) {
                     //split the line up by a space
                     String[] parts = s.trim().split(" ");
+
                     switch (parts[0]) {
                         case "StandardLemon":
                             lemons_buffer.add(new StandardLemon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
@@ -237,7 +251,8 @@ public class Game extends SurfaceView implements Runnable {
                 }
             }
             //closes the stream
-            is.close();
+            if (is != null)
+                is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -327,7 +342,7 @@ public class Game extends SurfaceView implements Runnable {
                         tmp.drawRect(object_rect, object.paint);
                         break;
                     case TOUCH_BUTTON:
-                        tmp.drawRect(object_rect,object.paint);
+                        tmp.drawRect(object_rect, object.paint);
                         break;
 
                 }
@@ -363,7 +378,7 @@ public class Game extends SurfaceView implements Runnable {
         paint.setColor(Color.BLACK);
         canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         frame_dest_rect.bottom = getHeight();
-        frame_dest_rect.right = (1080 / getHeight()) * 1920;
+        frame_dest_rect.right = getHeight() / 9 * 16;
         canvas.drawBitmap(frame, null, frame_dest_rect, null);
 
         // Draws the exit button
@@ -383,8 +398,11 @@ public class Game extends SurfaceView implements Runnable {
                 // The user has tapped the screen
                 touching = true;
                 this.touchX = (int) event.getX();
+                this.touchX = (int) (((float) this.touchX / (float) frame_dest_rect.right) * 1920f);
+
 
                 this.touchY = (int) event.getY();
+                this.touchY = (int) (((float) this.touchY / (float) frame_dest_rect.bottom) * 1080f);
 
                 touch_rect.top = touchY - 30;
                 touch_rect.left = touchX - 30;
@@ -401,10 +419,6 @@ public class Game extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_UP:
                 // When the user is no longer touching the screen
                 touching = false;
-                touch_rect.top = -100;
-                touch_rect.left = -100;
-                touch_rect.bottom = -90;
-                touch_rect.right = -90;
                 break;
         }
         return true;
