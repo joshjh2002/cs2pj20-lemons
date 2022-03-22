@@ -2,6 +2,7 @@ package com.joshh29012945.lemons;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,13 @@ public class ItemAdapter extends BaseAdapter {
     LayoutInflater mInflater;
     String[] items;
     String[] descriptions;
+    Context context;
 
     public ItemAdapter(Context c, String[] i, String[] d) {
         items = i;
         descriptions = d;
         mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        context = c;
     }
 
 
@@ -48,6 +51,7 @@ public class ItemAdapter extends BaseAdapter {
         TextView nameTextView = v.findViewById(R.id.name_text_view);
         TextView descriptionTextView = v.findViewById(R.id.description_view);
         TextView highScore = v.findViewById(R.id.highScore);
+        TextView personalBest = v.findViewById(R.id.personalBestView);
 
         //sets the name and description of the current level entry
         String name = items[i];
@@ -64,7 +68,14 @@ public class ItemAdapter extends BaseAdapter {
             myRef.get().addOnCompleteListener(y -> {
                 if (y.isSuccessful()) {
                     if (y.getResult().exists()) {
-                        highScore.setText("High Score: " + y.getResult().getValue().toString());
+                        highScore.setText("Highest Score: " + y.getResult().getValue().toString());
+                        SharedPreferences sharedPref = context.getSharedPreferences("scores", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        String lastScore = sharedPref.getString(name, "-1");
+                        if (lastScore != "-1")
+                            personalBest.setText("Personal Best: " + lastScore);
+                        else
+                            personalBest.setText("");
                     } else {
 
                     }

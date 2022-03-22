@@ -510,6 +510,7 @@ public class Game extends SurfaceView implements Runnable {
         // Actually switches activity
         switchActivityIntent.putExtra("pass_fail", exitMessage);
         switchActivityIntent.putExtra("score", score + "");
+        switchActivityIntent.putExtra("name", name);
         context.startActivity(switchActivityIntent);
     }
 

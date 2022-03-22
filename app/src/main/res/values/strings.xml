@@ -12,6 +12,7 @@
 
     <string name="level_finished">Level %1$s</string>
     <string name="score_text">Score: %1$s</string>
+    <string name="personal_best">Personal Best: %1$s</string>
     <string name="main_menu">Return to Main Menu</string>
 
     <string-array name="level_name">
