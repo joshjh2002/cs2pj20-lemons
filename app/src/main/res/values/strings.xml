@@ -21,9 +21,9 @@
         <item>Level 3</item>
     </string-array>
     <string-array name="level_description">
-        <item>Let\'s teach you the basics</item>
-        <item>Time to get a little more difficult</item>
-        <item>Think you can give this a go?</item>
+        <item>Lemons must reach the exit</item>
+        <item>Stopper Lemons can be touched to keep them in place</item>
+        <item>Press the big red button!</item>
     </string-array>
 
 
