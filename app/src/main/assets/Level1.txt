@@ -1,13 +1,11 @@
-StopperLemon 0 0
 StandardLemon 0 0
 StandardLemon 0 0
-StopperLemon 0 0
-Platform 300 300 1200 45
+StandardLemon 0 0
+StandardLemon 0 0
+Platform 300 300 500 45
 Platform 300 0 45 300
-Platform 795 0 45 300
-Platform 1455 0 45 300
-Exit 1300 172
+Platform 800 600 445 45
+Platform 1200 300 45 345
+Exit 900 472
 Spawner 340 235 2
-Button 600 290 7
-Button 1100 290 7
 TimeLimit 60

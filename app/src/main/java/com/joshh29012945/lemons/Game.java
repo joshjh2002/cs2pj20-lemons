@@ -112,7 +112,7 @@ public class Game extends SurfaceView implements Runnable {
     /**
      * If true, then will be used to debug certain elements. Like drawing the touch location
      */
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     /**
      * Similar to DeltaTime in Unity. Holds time it took to process the last frame
      */
@@ -145,7 +145,7 @@ public class Game extends SurfaceView implements Runnable {
      *
      * @param context the current context the game is ran in
      */
-    public Game(Context context, String level, boolean isExternal, String name) {
+    public Game(Context context, String level, boolean isExternal, String name, boolean hardMode) {
         super(context);
 
         this.name = name;
@@ -197,6 +197,9 @@ public class Game extends SurfaceView implements Runnable {
 
         LoadImages();
         LoadSounds();
+
+        if (hardMode)
+            this.time_limit = this.time_limit / 2;
     }
 
     private void LoadSounds() {

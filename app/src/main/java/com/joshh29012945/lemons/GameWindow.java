@@ -57,9 +57,9 @@ public class GameWindow extends AppCompatActivity {
                     file = level;
                 break;
         }
-
+        boolean hardMode = intent.getBooleanExtra("hard", false);
         //Create a new game
-        Game game = new Game(this, file, isExternal, name);
+        Game game = new Game(this, file, isExternal, name, hardMode);
         game.setBackgroundColor(Color.WHITE);
 
         // the view to the game
